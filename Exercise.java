@@ -16,19 +16,165 @@ class Exercise {
     public enum Operation {
         PLUS("+") {
             int apply(int x, int y) { return x + y; }
+
+            Exercise newExercise(Level level) {
+                int lhs, rhs;
+                switch (level) {
+                case EASY:
+                    lhs = uniform(11, 99);
+                    rhs = uniform(11, 99);
+                    break;
+                case MEDIUM:
+                    lhs = uniform(11, 999);
+                    rhs = uniform(111, 999);
+                    break;
+                case HARD:
+                    lhs = uniform(111, 999);
+                    rhs = uniform(1011, 9999);
+                    break;
+                case ESTIMATION:
+                    lhs = uniform(10000, 999999);
+                    rhs = uniform(50000, 999999);
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+                }
+                return new Exercise(level, this, lhs, rhs);
+            }
         },
         MINUS("-") {
             int apply(int x, int y) { return x - y; }
+
+            Exercise newExercise(Level level) {
+                int lhs, rhs;
+                switch (level) {
+                case EASY:
+                    lhs = uniform(30, 99);
+                    rhs = uniform(5, lhs - 3);
+                    break;
+                case MEDIUM:
+                    lhs = uniform(30, 499);
+                    rhs = uniform(11, lhs - 11);
+                    break;
+                case HARD:
+                    lhs = uniform(111, 999);
+                    rhs = uniform(111, lhs - 111);
+                    break;
+                case ESTIMATION:
+                    lhs = uniform(10000, 999999);
+                    rhs = uniform(50000, lhs - 50000);
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+                }
+                return new Exercise(level, this, lhs, rhs);
+            }
         },
         TIMES("*") {
             int apply(int x, int y) { return x * y; }
+
+            Exercise newExercise(Level level) {
+                int lhs, rhs;
+                switch (level) {
+                case EASY:
+                    lhs = uniform(5, 20);
+                    rhs = uniform(3, 10);
+                    break;
+                case MEDIUM:
+                    lhs = uniform(5, 20);
+                    rhs = uniform(9, 25);
+                    break;
+                case HARD:
+                    lhs = uniform(11, 99);
+                    rhs = uniform(11, 99);
+                    break;
+                case ESTIMATION:
+                    lhs = uniform(500, 999);
+                    rhs = uniform(500, 999);
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+                }
+                return new Exercise(level, this, lhs, rhs);
+            }
         },
         DIVIDE("/") {
             int apply(int x, int y) { return x / y; }
+
+            Exercise newExercise(Level level) {
+                int lhs, rhs;
+                switch (level) {
+                case EASY:
+                    rhs = uniform(3, 10);
+                    lhs = rhs * uniform(5, 20);
+                    break;
+                case MEDIUM:
+                    rhs = uniform(3, 15);
+                    lhs = rhs * uniform(5, 40);
+                    break;
+                case HARD:
+                    rhs = uniform(11, 99);
+                    lhs = rhs * uniform(11, 99);
+                    break;
+                case ESTIMATION:
+                    rhs = uniform(500, 999);
+                    lhs = rhs * uniform(500, 999);
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+                }
+                return new Exercise(level, this, lhs, rhs);
+            }
         },
         PERCENT_OF("% of") {
             int apply(int x, int y) { return x * y / 100; }
+
+            Exercise newExercise(Level level) {
+                int lhs, rhs, random_index;
+                switch (level) {
+                case EASY:
+                    random_index = uniform(0, 6);
+                    lhs = percentage_array_easy[random_index][0];
+                    rhs = percentage_array_easy[random_index][1] * uniform(2, 10);
+                    break;
+                case MEDIUM:
+                    random_index = uniform(0, 6);
+                    lhs = percentage_array_easy[random_index][0];
+                    rhs = percentage_array_easy[random_index][1] * uniform(2, 20);
+                    break;
+                case HARD:
+                    random_index = uniform(0, 10);
+                    lhs = percentage_array_hard[random_index][0];
+                    rhs = percentage_array_hard[random_index][1] * uniform(2, 20);
+                    break;
+                case ESTIMATION:
+                    lhs = uniform(2, 99);
+                    rhs = uniform(111, 9999);
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+                }
+                return new Exercise(level, this, lhs, rhs);
+            }
         };
+
+        private static final int[][] percentage_array_easy =
+            { {80, 5}, {75, 4}, {60, 5}, {50, 2}, {40, 5}, {25, 4}, {20, 5}};
+
+        private static final int[][] percentage_array_hard =
+            { {90, 10}, {80, 5}, {75, 4}, {70, 10}, {60, 5}, {50, 2},
+              {40, 5}, {30, 10}, {25, 4}, {20, 5}, {10, 10} };
+
+        private static final Random random = new Random();
+
+        private static final int uniform(int a, int b) {
+            return a + random.nextInt(b - a);
+        }
+
+        public static Exercise newRandomExercise(Level level) {
+            Operation[] ops = values();
+            return ops[random.nextInt(ops.length)].newExercise(level);
+        }
 
         private final String symbol;
         Operation(String symbol) {
@@ -39,151 +185,20 @@ class Exercise {
         }
 
         abstract int apply(int x, int y);
+        abstract Exercise newExercise(Level level);
     }
 
-    private static final Random random = new Random();
-
-    private static final int[][] percentage_array_easy =
-      { {80, 5}, {75, 4}, {60, 5}, {50, 2}, {40, 5}, {25, 4}, {20, 5}};
-
-    private static final int[][] percentage_array_hard =
-      { {90, 10}, {80, 5}, {75, 4}, {70, 10}, {60, 5}, {50, 2},
-        {40, 5}, {30, 10}, {25, 4}, {20, 5}, {10, 10} };
-
-    private final int lhs, rhs;
     private final Level level;
     private final Operation operation;
+    private final int lhs, rhs;
 
     private int givenAnswer;
 
-    private Exercise(Level level, Operation operation) {
+    private Exercise(Level level, Operation operation, int lhs, int rhs) {
         this.level = level;
         this.operation = operation;
-
-        // create lhs and rhs
-        switch (operation) {
-        case PLUS:
-            switch (level) {
-            case EASY:
-                lhs = uniform(11, 99);
-                rhs = uniform(11, 99);
-                break;
-            case MEDIUM:
-                lhs = uniform(11, 999);
-                rhs = uniform(111, 999);
-                break;
-            case HARD:
-                lhs = uniform(111, 999);
-                rhs = uniform(1011, 9999);
-                break;
-            case ESTIMATION:
-                lhs = uniform(10000, 999999);
-                rhs = uniform(50000, 999999);
-                break;
-            default:
-                throw new IllegalArgumentException();
-            }
-
-            break;
-        case MINUS:
-            switch (level) {
-            case EASY:
-                lhs = uniform(30, 99);
-                rhs = uniform(5, lhs - 3);
-                break;
-            case MEDIUM:
-                lhs = uniform(30, 499);
-                rhs = uniform(11, lhs - 11);
-                break;
-            case HARD:
-                lhs = uniform(111, 999);
-                rhs = uniform(111, lhs - 111);
-                break;
-            case ESTIMATION:
-                lhs = uniform(10000, 999999);
-                rhs = uniform(50000, lhs - 50000);
-                break;
-            default:
-                throw new IllegalArgumentException();
-            }
-            break;
-        case TIMES:
-            switch (level) {
-            case EASY:
-                lhs = uniform(5, 20);
-                rhs = uniform(3, 10);
-                break;
-            case MEDIUM:
-                lhs = uniform(5, 20);
-                rhs = uniform(9, 25);
-                break;
-            case HARD:
-                lhs = uniform(11, 99);
-                rhs = uniform(11, 99);
-                break;
-            case ESTIMATION:
-                lhs = uniform(500, 999);
-                rhs = uniform(500, 999);
-                break;
-            default:
-                throw new IllegalArgumentException();
-            }
-            break;
-        case DIVIDE:
-            switch (level) {
-            case EASY:
-                rhs = uniform(3, 10);
-                lhs = rhs * uniform(5, 20);
-                break;
-            case MEDIUM:
-                rhs = uniform(3, 15);
-                lhs = rhs * uniform(5, 40);
-                break;
-            case HARD:
-                rhs = uniform(11, 99);
-                lhs = rhs * uniform(11, 99);
-                break;
-            case ESTIMATION:
-                rhs = uniform(500, 999);
-                lhs = rhs * uniform(500, 999);
-                break;
-            default:
-                throw new IllegalArgumentException();
-            }
-            break;
-        case PERCENT_OF:
-            int rand_percentage;
-            switch (level) {
-            case EASY:
-                rand_percentage = uniform(0, 6);
-                lhs = percentage_array_easy[rand_percentage][0];
-                rhs = percentage_array_easy[rand_percentage][1] * uniform(2, 10);
-                break;
-            case MEDIUM:
-                rand_percentage = uniform(0, 6);
-                lhs = percentage_array_easy[rand_percentage][0];
-                rhs = percentage_array_easy[rand_percentage][1] * uniform(2, 20);
-                break;
-            case HARD:
-                rand_percentage = uniform(0, 10);
-                lhs = percentage_array_hard[rand_percentage][0];
-                rhs = percentage_array_hard[rand_percentage][1] * uniform(2, 20);
-                break;
-            case ESTIMATION:
-                lhs = uniform(2, 99);
-                rhs = uniform(111, 9999);
-                break;
-            default:
-                throw new IllegalArgumentException();
-            }
-            break;
-        default:
-            throw new IllegalArgumentException();
-        }
-    }
-
-    protected final int uniform(int a, int b) {
-        return a + random.nextInt(b - a);
+        this.lhs = lhs;
+        this.rhs = rhs;
     }
 
     protected int solution() {
@@ -215,38 +230,29 @@ class Exercise {
         return String.format("%d %s %d = ", lhs, operation, rhs);
     }
 
-    public static Exercise create(Level level, Operation operation) {
-        return new Exercise(level, operation);
-    }
-
     public static void main(String[] args) {
-        System.out.print("Exercise: ");
-        List<Exercise> exercises = new LinkedList<Exercise>();
+        if (args.length != 1) {
+            System.err.print("Please give one argument, one of:");
+            for (Operation op : Operation.values()) {
+                System.err.print(" " + op.name().toLowerCase());
+            }
+            System.err.println();
+            return;
+        }
 
         Operation operation;
-        switch (args[0]) {
-        case "add":
-            operation = Operation.PLUS;
-            break;
-        case "sub":
-            operation = Operation.MINUS;
-            break;
-        case "mult":
-            operation = Operation.TIMES;
-            break;
-        case "div":
-            operation = Operation.DIVIDE;
-            break;
-        case "perc":
-            operation = Operation.PERCENT_OF;
-            break;
-        default:
-            throw new IllegalArgumentException();
+        try {
+            operation = Operation.valueOf(args[0].toUpperCase());
+        } catch (IllegalArgumentException exception) {
+            System.err.println("Unknown operation: " + args[0]);
+            return;
         }
+
+        List<Exercise> exercises = new LinkedList<Exercise>();
 
         Console console = System.console();
         while (true) {
-            Exercise e = Exercise.create(Level.EASY, operation);
+            Exercise e = operation.newExercise(Level.EASY);
             System.out.print(e.question());
             if (e.answer(console.readLine())) {
                 //System.out.println("Correct!");
