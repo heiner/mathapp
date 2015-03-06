@@ -5,6 +5,8 @@
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Random;
 import java.io.Console;
 
@@ -62,7 +64,7 @@ class Exercise {
                     break;
                 case ESTIMATION:
                     lhs = uniform(10000, 999999);
-                    rhs = uniform(50000, lhs - 50000);
+                    rhs = uniform(50000, lhs - 10000); // here was a bug?
                     break;
                 default:
                     throw new IllegalArgumentException();
@@ -205,8 +207,24 @@ class Exercise {
         return operation.apply(lhs, rhs);
     }
 
+    private static final Map<Character, Integer> suffixes =
+        new HashMap<Character, Integer>();
+    static {
+        suffixes.put('k', 1000);
+        suffixes.put('m', 1000*1000);
+        suffixes.put('b', 1000*1000*1000);
+    }
+
     private boolean answer(String s) {
-        givenAnswer = Integer.parseInt(s);
+        Character lastChar = Character.toLowerCase(s.charAt(s.length() - 1));
+        int multiplier = 1;
+        if (suffixes.containsKey(lastChar)) {
+            multiplier = suffixes.get(lastChar);
+            s = s.substring(0, s.length() - 1);
+        }
+        float a = multiplier * Float.valueOf(s);
+
+        givenAnswer = Math.round(a);
         return givenAnswerCorrect();
     }
 
@@ -227,24 +245,47 @@ class Exercise {
     }
 
     public String question() {
-        return String.format("%d %s %d = ", lhs, operation, rhs);
+        /*
+          // for estimation, have "k" or smth.:
+          Add: 211K + 221K
+          Minus: 531K - 21K
+          Div: 212K / 311
+          Perc: 92% of 2.42K
+         */
+        if (level != Level.ESTIMATION || operation == Operation.TIMES) {
+            return String.format("%d %s %d = ", lhs, operation, rhs);
+        }
+        switch (operation) {
+        case PLUS: case MINUS:
+            return String.format("%dk %s %dk = ", lhs/1000, operation, rhs/1000);
+        case DIVIDE:
+            return String.format("%dk / %d = ", lhs/1000, rhs);
+        case PERCENT_OF:
+            return String.format("%d % of %d = ", lhs, rhs/1000);
+        default:
+            return null;
+        }
     }
 
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.print("Please give one argument, one of:");
+        Level level;
+        Operation operation;
+        try {
+            if (args.length != 2) {
+                throw new IllegalArgumentException();
+            }
+            level = Level.valueOf(args[0].toUpperCase());
+            operation = Operation.valueOf(args[1].toUpperCase());
+        } catch (IllegalArgumentException exception) {
+            System.err.print(Exercise.class.getSimpleName() + " {");
+            for (Level lev : Level.values()) {
+                System.err.print(" " + lev.name().toLowerCase());
+            }
+            System.err.print(" } {");
             for (Operation op : Operation.values()) {
                 System.err.print(" " + op.name().toLowerCase());
             }
-            System.err.println();
-            return;
-        }
-
-        Operation operation;
-        try {
-            operation = Operation.valueOf(args[0].toUpperCase());
-        } catch (IllegalArgumentException exception) {
-            System.err.println("Unknown operation: " + args[0]);
+            System.err.println(" }");
             return;
         }
 
@@ -252,7 +293,7 @@ class Exercise {
 
         Console console = System.console();
         while (true) {
-            Exercise e = operation.newExercise(Level.EASY);
+            Exercise e = operation.newExercise(level);
             System.out.print(e.question());
             if (e.answer(console.readLine())) {
                 //System.out.println("Correct!");
