@@ -290,26 +290,26 @@ class Exercise {
         }
 
         List<Exercise> exercises = new LinkedList<Exercise>();
+        int correctCount = 0;
+        int wrongCount = 0;
 
         Console console = System.console();
-        while (true) {
+        do {
             Exercise e = operation.newExercise(level);
             System.out.print(e.question());
             if (e.answer(console.readLine())) {
-                //System.out.println("Correct!");
+                ++correctCount;
             } else {
-                //System.out.println("Wrong.");
+                ++wrongCount;
             }
             exercises.add(e);
-
-            if (exercises.size() >= 3) {
-                break;
-            }
-        }
+        } while (exercises.size() < 3);
         for ( Exercise e : exercises) {
             System.out.println(e.question() + e.solution() +
                                ", you gave " + e.getGivenAnswer() +
                                (e.givenAnswerCorrect() ? ", correct" : ", wrong") );
         }
+        System.out.format("%d - %d = %d points%n", correctCount, wrongCount,
+                          Math.max(0, correctCount - wrongCount));
     }
 }
