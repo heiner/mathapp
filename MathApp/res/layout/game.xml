@@ -1,48 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    >
   <TextView
+      android:id="@+id/timer_textview"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="00:00"
-      android:id="@+id/timer_textview"
-      android:layout_margin="10dp"
-      android:layout_gravity="right"
-      android:gravity="center"
       android:textSize="40dp"
+      android:layout_alignParentRight="true"
       android:fontFamily="sans-serif-thin"
       />
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:orientation="horizontal" >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/exercise_start"
-        android:id="@+id/exercise_textview"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:textSize="40dp"
-        android:fontFamily="sans-serif"
+
+  <TextView
+      android:id="@+id/exercise_textview"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/exercise_start"
+      android:textSize="@dimen/exercise_height"
+      android:fontFamily="sans-serif"
+      android:layout_below="@id/timer_textview"
+      android:layout_toLeftOf="@+id/answer_edittext"
+      android:layout_centerHorizontal="true"
+      android:layout_centerInParent="true"
       />
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/answer_edittext"
-        android:hint="@string/answer"
-        android:inputType="number"
-        />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/answer_button"
-        />
-  </LinearLayout>
-</LinearLayout>
+  <EditText
+      android:id="@id/answer_edittext"
+      android:layout_width="@dimen/answer_width"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/timer_textview"
+      android:layout_toLeftOf="@+id/send_button"
+      android:hint="@string/answer"
+      android:inputType="number"
+      android:imeOptions="actionSend"
+      android:textSize="@dimen/exercise_height"
+      android:layout_centerHorizontal="true"
+      android:layout_centerInParent="true"
+      />
+  <ImageButton
+      android:id="@id/send_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/ic_action_send"
+      android:onClick="sendAnswer"
+      android:layout_below="@id/timer_textview"
+      android:layout_alignParentRight="true"
+      />
+
+  <!--<Space
+      android:id="@+id/space_after_question"
+      android:layout_width="fill_parent"
+      android:layout_height="20dp"
+      android:layout_below="@id/exercise_textview"
+      />-->
+
+  <TextView
+      android:id="@+id/right_answers_number"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="0"
+      android:textStyle="bold"
+      android:layout_marginTop="20dp"
+      android:layout_below="@id/exercise_textview"
+      android:layout_centerHorizontal="true"
+      android:layout_toLeftOf="@+id/right_answers_text"
+      />
+  <TextView
+      android:id="@id/right_answers_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/right_answers_text"
+      android:layout_below="@id/exercise_textview"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="20dp"
+      />
+  <TextView
+      android:id="@+id/wrong_answers_number"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="0"
+      android:textStyle="bold"
+      android:layout_centerHorizontal="true"
+      android:layout_below="@id/right_answers_text"
+      android:layout_toLeftOf="@+id/wrong_answers_text"
+      />
+  <TextView
+      android:id="@id/wrong_answers_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/wrong_answers_text"
+      android:layout_below="@id/right_answers_text"
+      android:layout_centerHorizontal="true"
+      />
+</RelativeLayout>

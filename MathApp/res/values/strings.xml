@@ -7,9 +7,11 @@
   <string name="title_game_activity">Game</string>
   <string name="action_search">Search action</string>
   <string name="action_settings">Settings action</string>
-  <string name="answer">Answer</string>
+  <string name="answer">\?</string>
   <string name="exercise_start">1 − 1 = </string>
   <string name="answer_button">Go</string>
+  <string name="right_answers_text">" right answers and "</string>
+  <string name="wrong_answers_text">" wrong answers"</string>
   <string-array name="action_list">
     <item>Mercury</item>
     <item>Venus</item>

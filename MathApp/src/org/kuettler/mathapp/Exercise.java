@@ -212,7 +212,7 @@ class Exercise {
         suffixes.put('b', 1000*1000*1000);
     }
 
-    private boolean answer(String s) {
+    boolean answer(String s) {
         Character lastChar = Character.toLowerCase(s.charAt(s.length() - 1));
         int multiplier = 1;
         if (suffixes.containsKey(lastChar)) {

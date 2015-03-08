@@ -17,7 +17,7 @@ import android.support.v7.app.ActionBar;
 
 public class MathActivity extends ActionBarActivity
 {
-    private static final String TAG = "MathApp";
+    static final String TAG = "MathApp";
     public final static String EXTRA_MESSAGE = "org.kuettler.mathapp.MESSAGE";
 
     /** Called when the activity is first created. */
