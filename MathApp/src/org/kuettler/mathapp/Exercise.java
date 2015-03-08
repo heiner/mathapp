@@ -1,7 +1,4 @@
-
-/*
- * Exercise game
- */
+package org.kuettler.mathapp;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -16,7 +13,7 @@ class Exercise {
     }
 
     public enum Operation {
-        PLUS("+") {
+        PLUS(" + ") {
             int apply(int x, int y) { return x + y; }
 
             Exercise newExercise(Level level) {
@@ -44,7 +41,7 @@ class Exercise {
                 return new Exercise(level, this, lhs, rhs);
             }
         },
-        MINUS("-") {
+        MINUS(" − ") {
             int apply(int x, int y) { return x - y; }
 
             Exercise newExercise(Level level) {
@@ -72,7 +69,7 @@ class Exercise {
                 return new Exercise(level, this, lhs, rhs);
             }
         },
-        TIMES("*") {
+        TIMES(" × ") {
             int apply(int x, int y) { return x * y; }
 
             Exercise newExercise(Level level) {
@@ -100,7 +97,7 @@ class Exercise {
                 return new Exercise(level, this, lhs, rhs);
             }
         },
-        DIVIDE("/") {
+        DIVIDE(" ⁄ ") {
             int apply(int x, int y) { return x / y; }
 
             Exercise newExercise(Level level) {
@@ -128,7 +125,7 @@ class Exercise {
                 return new Exercise(level, this, lhs, rhs);
             }
         },
-        PERCENT_OF("% of") {
+        PERCENT_OF("% of ") {
             int apply(int x, int y) { return x * y / 100; }
 
             Exercise newExercise(Level level) {
@@ -253,15 +250,15 @@ class Exercise {
           Perc: 92% of 2.42K
          */
         if (level != Level.ESTIMATION || operation == Operation.TIMES) {
-            return String.format("%d %s %d = ", lhs, operation, rhs);
+            return String.format("%d%s%d = ", lhs, operation, rhs);
         }
         switch (operation) {
         case PLUS: case MINUS:
-            return String.format("%dk %s %dk = ", lhs/1000, operation, rhs/1000);
+            return String.format("%dk%s%dk = ", lhs/1000, operation, rhs/1000);
         case DIVIDE:
-            return String.format("%dk / %d = ", lhs/1000, rhs);
+            return String.format("%dk%s%d = ", lhs/1000, operation, rhs);
         case PERCENT_OF:
-            return String.format("%d % of %d = ", lhs, rhs/1000);
+            return String.format("%d%s%d = ", lhs, operation, rhs/1000);
         default:
             return null;
         }
@@ -304,7 +301,7 @@ class Exercise {
             }
             exercises.add(e);
         } while (exercises.size() < 3);
-        for ( Exercise e : exercises) {
+        for (Exercise e : exercises) {
             System.out.println(e.question() + e.solution() +
                                ", you gave " + e.getGivenAnswer() +
                                (e.givenAnswerCorrect() ? ", correct" : ", wrong") );

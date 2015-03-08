@@ -3,13 +3,31 @@
       package="org.kuettler.mathapp"
       android:versionCode="1"
       android:versionName="1.0">
-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
-        <activity android:name="MathActivity"
-                  android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+  <uses-sdk android:minSdkVersion="7"  android:targetSdkVersion="18" />
+  <application android:label="@string/app_name" android:icon="@drawable/ic_launcher"
+               android:theme="@style/CustomActionBarTheme">
+    <activity android:name="org.kuettler.mathapp.MathActivity"
+              android:label="@string/app_name">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity
+        android:name="org.kuettler.mathapp.DisplayMessageActivity"
+        android:label="@string/title_activity_display_message"
+        android:parentActivityName="org.kuettler.mathapp.MathActivity" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="org.kuettler.mathapp.MathActivity" />
+    </activity>
+    <activity
+        android:name="org.kuettler.mathapp.GameActivity"
+        android:label="@string/title_game_activity"
+        android:parentActivityName="org.kuettler.mathapp.MathActivity" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="org.kuettler.mathapp.MathActivity" />
+    </activity>
+  </application>
 </manifest>
