@@ -12,6 +12,11 @@ class Exercise {
         EASY, MEDIUM, HARD, ESTIMATION;
         public final static String TAG =
             Level.class.getCanonicalName();
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
 
     public enum Operation {

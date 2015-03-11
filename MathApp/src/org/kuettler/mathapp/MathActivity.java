@@ -28,12 +28,12 @@ public class MathActivity extends ActionBarActivity
     private Mode mode = Mode.RANDOM;
 
     public enum Mode {
-        PLUS(R.id.radio_plus),
-        MINUS(R.id.radio_minus),
-        TIMES(R.id.radio_times),
-        DIVIDE(R.id.radio_divide),
-        PERCENT_OF(R.id.radio_percent),
-        RANDOM(R.id.radio_random) {
+        PLUS(R.id.radio_plus, "addition"),
+        MINUS(R.id.radio_minus, "subtraction"),
+        TIMES(R.id.radio_times, "multiplication"),
+        DIVIDE(R.id.radio_divide, "division"),
+        PERCENT_OF(R.id.radio_percent, "percentage"),
+        RANDOM(R.id.radio_random, "random") {
             @Override
             public Exercise.Operation toOperation() {
                 return Exercise.Operation.randomOperation();
@@ -44,12 +44,19 @@ public class MathActivity extends ActionBarActivity
             Mode.class.getCanonicalName();
 
         private final int radioId;
-        Mode(int radioId) {
+        private final String modeName;
+        Mode(int radioId, String modeName) {
             this.radioId = radioId;
+            this.modeName = modeName;
         }
 
         public int getRadioId() {
             return radioId;
+        }
+
+        @Override
+        public String toString() {
+            return modeName;
         }
 
         private static final Map<Integer, Mode> idToMode
@@ -123,11 +130,9 @@ public class MathActivity extends ActionBarActivity
 
     private void setButtonText() {
         TextView button = (TextView) findViewById(R.id.button_start_game);
-        if (mode == Mode.RANDOM) {
-            button.setText("Start new random game");
-        } else {
-            button.setText(R.string.button_start_game);
-        }
+        String text = "Start new " + level.toString() + " " +
+            mode.toString() + " game";
+        button.setText(text);
     }
 
     @Override
