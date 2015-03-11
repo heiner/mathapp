@@ -64,11 +64,11 @@ class Exercise {
                     break;
                 case HARD:
                     lhs = uniform(111, 999);
-                    rhs = uniform(111, lhs - 111);
+                    rhs = uniform(37, lhs - 37);
                     break;
                 case ESTIMATION:
                     lhs = uniform(10000, 999999);
-                    rhs = uniform(50000, lhs - 10000);
+                    rhs = uniform(3333, lhs - 3333);
                     break;
                 default:
                     throw new IllegalArgumentException();
