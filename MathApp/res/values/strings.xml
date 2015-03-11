@@ -9,8 +9,9 @@
   <string name="answer">\?</string>
   <string name="exercise_start">1 − 1 = </string>
   <string name="answer_button">Go</string>
-  <string name="right_answers_text">" right answers and "</string>
-  <string name="wrong_answers_text">" wrong answers"</string>
+  <string name="right_answers_text">" right answer"</string>
+  <string name="wrong_answers_text">" wrong answer"</string>
+  <string name="points_text">" point"</string>
   <string name="level_header">Difficulty level</string>
   <string name="operation_header">Mathematical Operation</string>
   <string name="easy">Easy</string>

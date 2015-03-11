@@ -13,4 +13,6 @@
   <dimen name="extraTimer_fontSize">16sp</dimen>
   <dimen name="suffix_button_size">40dp</dimen>
   <dimen name="suffix_button_fontSize">14dp</dimen>
+  <dimen name="vertical_distance_answer_stats">5dp</dimen>
+  <dimen name="margin_wrong_stat_distance">140dp</dimen>
 </resources>

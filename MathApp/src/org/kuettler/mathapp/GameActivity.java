@@ -35,6 +35,7 @@ public class GameActivity extends ActionBarActivity {
     private CountDownTimer mCountDownTimer;
     private TextView mRightAnswersView;
     private TextView mWrongAnswersView;
+    private TextView mPointsView;
 
     private View mSendButton;
     private View mAcceptImage;
@@ -69,6 +70,7 @@ public class GameActivity extends ActionBarActivity {
         mAnswerEditText = (EditText) findViewById(R.id.answer_edittext);
         mRightAnswersView = (TextView) findViewById(R.id.right_answers_number);
         mWrongAnswersView = (TextView) findViewById(R.id.wrong_answers_number);
+        mPointsView = (TextView) findViewById(R.id.points_number);
 
         mSendButton = findViewById(R.id.send_button);
         mAcceptImage = findViewById(R.id.accept_image);
@@ -82,6 +84,8 @@ public class GameActivity extends ActionBarActivity {
         animFadeIn.setDuration(500);
 
         mGameTypeView.setText(level.toString() + "\n" + mode.toString());
+
+        updateRightWrongPoints();
 
         // Make mAnswerEditText's send call sendAnswer()
         mAnswerEditText.setOnEditorActionListener(
@@ -173,12 +177,33 @@ public class GameActivity extends ActionBarActivity {
             mRejectImage.setVisibility(View.INVISIBLE);
             mSendButton.startAnimation(imageFadeIn);
         }
-        mRightAnswersView.setText(Integer.toString(rightAnswers));
-        mWrongAnswersView.setText(Integer.toString(wrongAnswers));
 
+        updateRightWrongPoints();
+        newExercise();
+    }
+
+    private void updateRightWrongPoints() {
         Log.d(MathActivity.TAG,
               String.format("%d - %d points", rightAnswers, wrongAnswers));
-        newExercise();
+
+        mRightAnswersView.setText(Integer.toString(rightAnswers));
+        mWrongAnswersView.setText(Integer.toString(wrongAnswers));
+        int points = Math.max(0, rightAnswers - wrongAnswers);
+        mPointsView.setText(Integer.toString(points));
+
+        pluralifyView(R.id.right_answers_text, rightAnswers, R.string.right_answers_text);
+        pluralifyView(R.id.wrong_answers_text, wrongAnswers, R.string.wrong_answers_text);
+        pluralifyView(R.id.points_text, points, R.string.points_text);
+    }
+
+    private void pluralifyView(int id, int n, int singularId) {
+        TextView view = (TextView) findViewById(id);
+        String text = getResources().getString(singularId);
+
+        if (n != 1) {
+            text += "s";
+        }
+        view.setText(text);
     }
 
     public void insertSuffix(View view) {
