@@ -181,6 +181,27 @@ public class GameActivity extends ActionBarActivity {
         newExercise();
     }
 
+    public void insertSuffix(View view) {
+        String suffix;
+        switch (view.getId()) {
+        case R.id.k_button:
+            suffix = "K";
+            break;
+        case R.id.m_button:
+            suffix = "M";
+            break;
+        default:
+            throw new IllegalArgumentException();
+        }
+        CharSequence answer = mAnswerEditText.getText();
+        if (answer.length() == 0) {
+            answer = "1";
+        } else if (Character.isLetter(answer.charAt(answer.length() - 1))) {
+            answer = answer.subSequence(0, answer.length() - 1);
+        }
+        mAnswerEditText.setTextKeepState(answer.toString() + suffix);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

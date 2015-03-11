@@ -39,7 +39,7 @@
       android:layout_height="wrap_content"
       android:layout_alignParentRight="true"
       android:layout_alignParentTop="true"
-      android:textSize="31sp"
+      android:textSize="@dimen/timer_textSize"
       android:text="00:00"
       />
 
@@ -100,6 +100,33 @@
       android:tint="@color/redTimer"
       />
 
+  <Button
+      android:id="@+id/k_button"
+      android:layout_width="@dimen/suffix_button_size"
+      android:layout_height="@dimen/suffix_button_size"
+      android:layout_below="@id/exercise_textview"
+      android:layout_alignLeft="@id/answer_edittext"
+      android:onClick="insertSuffix"
+      android:text="K"
+      style="?android:attr/borderlessButtonStyle"
+      android:textStyle="bold"
+      android:textSize="@dimen/suffix_button_fontSize"
+      android:textColor="@color/textColor"
+      />
+  <Button
+      android:id="@+id/m_button"
+      android:layout_width="@dimen/suffix_button_size"
+      android:layout_height="@dimen/suffix_button_size"
+      android:layout_toRightOf="@id/k_button"
+      android:layout_alignBottom="@id/k_button"
+      android:onClick="insertSuffix"
+      android:text="M"
+      style="?android:attr/borderlessButtonStyle"
+      android:textStyle="bold"
+      android:textSize="@dimen/suffix_button_fontSize"
+      android:textColor="@color/textColor"
+      />
+
   <!--<Space
       android:id="@+id/space_after_question"
       android:layout_width="fill_parent"
@@ -115,7 +142,7 @@
       android:text="0"
       android:textStyle="bold"
       android:layout_marginTop="20dp"
-      android:layout_below="@id/exercise_textview"
+      android:layout_below="@id/k_button"
       android:layout_centerHorizontal="true"
       android:layout_toLeftOf="@+id/right_answers_text"
       />
@@ -124,7 +151,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/right_answers_text"
-      android:layout_below="@id/exercise_textview"
+      android:layout_below="@id/k_button"
       android:layout_centerHorizontal="true"
       android:layout_marginTop="20dp"
       />
@@ -135,7 +162,7 @@
       android:text="0"
       android:textStyle="bold"
       android:layout_centerHorizontal="true"
-      android:layout_below="@id/right_answers_text"
+      android:layout_below="@id/k_button"
       android:layout_toLeftOf="@+id/wrong_answers_text"
       />
   <TextView
@@ -143,7 +170,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/wrong_answers_text"
-      android:layout_below="@id/right_answers_text"
+      android:layout_below="@id/k_button"
       android:layout_centerHorizontal="true"
       />
 </RelativeLayout>

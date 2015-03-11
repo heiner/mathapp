@@ -265,11 +265,11 @@ class Exercise {
         }
         switch (operation) {
         case PLUS: case MINUS:
-            return String.format("%dk%s%dk = ", lhs/1000, operation, rhs/1000);
+            return String.format("%dK%s%dK = ", lhs/1000, operation, rhs/1000);
         case DIVIDE:
-            return String.format("%dk%s%d = ", lhs/1000, operation, rhs);
+            return String.format("%dK%s%d = ", lhs/1000, operation, rhs);
         case PERCENT_OF:
-            return String.format("%d%s%.2fk = ", lhs, operation, rhs/1000.0);
+            return String.format("%d%s%.2fK = ", lhs, operation, rhs/1000.0);
         default:
             return null;
         }
