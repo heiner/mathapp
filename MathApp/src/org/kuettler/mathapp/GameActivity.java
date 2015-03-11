@@ -38,33 +38,14 @@ public class GameActivity extends ActionBarActivity {
     private int msecondsLeft;
 
     private Exercise.Level level;
-    private int radio_operation;
-
-    private static final Map<Integer, Exercise.Level> idsToLevels =
-        new HashMap<Integer, Exercise.Level>();
-    private static final Map<Integer, Exercise.Operation> idsToOperations =
-        new HashMap<Integer, Exercise.Operation>();
-    static {
-        idsToLevels.put(R.id.radio_easy, Exercise.Level.EASY);
-        idsToLevels.put(R.id.radio_medium, Exercise.Level.MEDIUM);
-        idsToLevels.put(R.id.radio_hard, Exercise.Level.HARD);
-        idsToLevels.put(R.id.radio_estimation, Exercise.Level.ESTIMATION);
-
-        idsToOperations.put(R.id.radio_plus, Exercise.Operation.PLUS);
-        idsToOperations.put(R.id.radio_minus, Exercise.Operation.MINUS);
-        idsToOperations.put(R.id.radio_times, Exercise.Operation.TIMES);
-        idsToOperations.put(R.id.radio_divide, Exercise.Operation.DIVIDE);
-        idsToOperations.put(R.id.radio_percent, Exercise.Operation.PERCENT_OF);
-    }
+    private MathActivity.Mode mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        level = idsToLevels.get(intent.getIntExtra(MathActivity.LEVEL,
-                                                   R.id.radio_easy));
-        radio_operation = intent.getIntExtra(MathActivity.OPERATION,
-                                             R.id.radio_random);
+        level = (Exercise.Level) intent.getSerializableExtra(Exercise.Level.TAG);
+        mode = (MathActivity.Mode) intent.getSerializableExtra(MathActivity.Mode.TAG);
 
         // Set the text view as the activity layout
         setContentView(R.layout.game);
@@ -124,14 +105,7 @@ public class GameActivity extends ActionBarActivity {
 
     protected void newExercise() {
         //Log.d(MathActivity.TAG, "newExercise, operation is " + radio_operation);
-        if (idsToOperations.containsKey(radio_operation)) {
-            exercise = idsToOperations.get(radio_operation).newExercise(level);
-        } else if (radio_operation == R.id.radio_random) {
-            exercise = Exercise.Operation.newRandomExercise(level);
-        } else {
-            new IllegalStateException();
-        }
-
+        exercise = mode.newExercise(level);
         mExerciseView.setText(exercise.question());
         exercises.add(exercise);
     }

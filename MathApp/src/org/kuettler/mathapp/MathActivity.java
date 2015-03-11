@@ -1,5 +1,8 @@
 package org.kuettler.mathapp;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,10 +21,56 @@ import android.support.v7.app.ActionBar;
 public class MathActivity extends ActionBarActivity
 {
     static final String TAG = "MathApp";
-    public final static String LEVEL = "org.kuettler.mathapp.LEVEL";
-    public final static String OPERATION = "org.kuettler.mathapp.OPERATION";
 
     private Intent intent;
+
+    private Exercise.Level level = Exercise.Level.EASY;
+    private Mode mode = Mode.RANDOM;
+
+    public enum Mode {
+        PLUS(R.id.radio_plus),
+        MINUS(R.id.radio_minus),
+        TIMES(R.id.radio_times),
+        DIVIDE(R.id.radio_divide),
+        PERCENT_OF(R.id.radio_percent),
+        RANDOM(R.id.radio_random) {
+            @Override
+            public Exercise.Operation toOperation() {
+                return Exercise.Operation.randomOperation();
+            }
+        };
+
+        public final static String TAG =
+            Mode.class.getCanonicalName();
+
+        private final int radioId;
+        Mode(int radioId) {
+            this.radioId = radioId;
+        }
+
+        public int getRadioId() {
+            return radioId;
+        }
+
+        private static final Map<Integer, Mode> idToMode
+            = new HashMap<Integer, Mode>();
+        static {
+            for (Mode m : values()) {
+                idToMode.put(m.getRadioId(), m);
+            }
+        }
+        public static Mode fromRadioId(int radioId) {
+            return idToMode.get(radioId);
+        }
+
+        public Exercise.Operation toOperation() {
+            return Exercise.Operation.valueOf(name());
+        }
+
+        public Exercise newExercise(Exercise.Level level) {
+            return toOperation().newExercise(level);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -30,10 +79,6 @@ public class MathActivity extends ActionBarActivity
         setContentView(R.layout.main);
 
         intent = new Intent(this, GameActivity.class);
-
-        // Default values
-        intent.putExtra(LEVEL, R.id.radio_easy);
-        intent.putExtra(OPERATION, R.id.radio_random);
 
         setButtonText();
 
@@ -52,25 +97,33 @@ public class MathActivity extends ActionBarActivity
         //                                                  mOnNavigationListener);
     }
 
+    private static final Map<Integer, Exercise.Level> idsToLevels =
+        new HashMap<Integer, Exercise.Level>();
+    static {
+        idsToLevels.put(R.id.radio_easy, Exercise.Level.EASY);
+        idsToLevels.put(R.id.radio_medium, Exercise.Level.MEDIUM);
+        idsToLevels.put(R.id.radio_hard, Exercise.Level.HARD);
+        idsToLevels.put(R.id.radio_estimation, Exercise.Level.ESTIMATION);
+    }
     public void setLevel(View view) {
-        intent.putExtra(LEVEL, view.getId());
+        level = idsToLevels.get(view.getId());
         setButtonText();
     }
 
-    public void setOperation(View view) {
-        //Log.d(TAG, "setOperation " + view.getId());
-        intent.putExtra(OPERATION, view.getId());
+    public void setMode(View view) {
+        mode = Mode.fromRadioId(view.getId());
         setButtonText();
     }
 
     public void startGame(View view) {
-        //if (intent.hasExtra(LEVEL) && intent.hasExtra(OPERATION)) { }
+        intent.putExtra(Exercise.Level.TAG, level);
+        intent.putExtra(Mode.TAG, mode);
         startActivity(intent);
     }
 
     private void setButtonText() {
         TextView button = (TextView) findViewById(R.id.button_start_game);
-        if (intent.getIntExtra(OPERATION, R.id.radio_random) == R.id.radio_random) {
+        if (mode == Mode.RANDOM) {
             button.setText("Start new random game");
         } else {
             button.setText(R.string.button_start_game);

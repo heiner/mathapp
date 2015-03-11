@@ -10,6 +10,8 @@ import java.io.Console;
 class Exercise {
     public enum Level {
         EASY, MEDIUM, HARD, ESTIMATION;
+        public final static String TAG =
+            Level.class.getCanonicalName();
     }
 
     public enum Operation {
@@ -61,7 +63,7 @@ class Exercise {
                     break;
                 case ESTIMATION:
                     lhs = uniform(10000, 999999);
-                    rhs = uniform(50000, lhs - 10000); // here was a bug?
+                    rhs = uniform(50000, lhs - 10000);
                     break;
                 default:
                     throw new IllegalArgumentException();
@@ -171,8 +173,12 @@ class Exercise {
         }
 
         public static Exercise newRandomExercise(Level level) {
+            return randomOperation().newExercise(level);
+        }
+
+        public static Operation randomOperation() {
             Operation[] ops = values();
-            return ops[random.nextInt(ops.length)].newExercise(level);
+            return ops[random.nextInt(ops.length)];
         }
 
         private final String symbol;
