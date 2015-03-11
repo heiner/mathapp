@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/level_header"
-        style="?android:attr/listSeparatorTextViewStyle"/>
+        style="?android:attr/listSeparatorTextViewStyle"
+        />
   <RadioGroup
       android:id="@+id/levels_radio_group"
       android:layout_width="fill_parent"

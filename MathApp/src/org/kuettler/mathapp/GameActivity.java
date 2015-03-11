@@ -16,6 +16,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -24,12 +27,18 @@ import android.util.Log;
 import android.support.v7.app.ActionBarActivity;
 
 public class GameActivity extends ActionBarActivity {
+    private TextView mGameTypeView;
+    private TextView mExtraTimeView;
     private TextView mTimerView;
     private TextView mExerciseView;
     private EditText mAnswerEditText;
     private CountDownTimer mCountDownTimer;
     private TextView mRightAnswersView;
     private TextView mWrongAnswersView;
+
+    private View mSendButton;
+    private View mAcceptImage;
+    private View mRejectImage;
 
     private final List<Exercise> exercises = new LinkedList<Exercise>();
     private Exercise exercise;
@@ -39,6 +48,9 @@ public class GameActivity extends ActionBarActivity {
 
     private Exercise.Level level;
     private MathActivity.Mode mode;
+
+    private Animation animFadeIn;
+    private Animation animFadeOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +62,26 @@ public class GameActivity extends ActionBarActivity {
         // Set the text view as the activity layout
         setContentView(R.layout.game);
 
+        mGameTypeView = (TextView) findViewById(R.id.gametype_textview);
+        mExtraTimeView = (TextView) findViewById(R.id.extratime_textview);
         mTimerView = (TextView) findViewById(R.id.timer_textview);
         mExerciseView = (TextView) findViewById(R.id.exercise_textview);
         mAnswerEditText = (EditText) findViewById(R.id.answer_edittext);
         mRightAnswersView = (TextView) findViewById(R.id.right_answers_number);
         mWrongAnswersView = (TextView) findViewById(R.id.wrong_answers_number);
+
+        mSendButton = findViewById(R.id.send_button);
+        mAcceptImage = findViewById(R.id.accept_image);
+        mRejectImage = findViewById(R.id.reject_image);
+
+        animFadeOut = AnimationUtils.loadAnimation(getApplicationContext(),
+                                                   R.anim.fade_out);
+        animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(),
+                                                  R.anim.fade_in);
+        animFadeOut.setDuration(1000);
+        animFadeIn.setDuration(500);
+
+        mGameTypeView.setText(level.toString() + "\n" + mode.toString());
 
         // Make mAnswerEditText's send call sendAnswer()
         mAnswerEditText.setOnEditorActionListener(
@@ -79,7 +106,7 @@ public class GameActivity extends ActionBarActivity {
             mCountDownTimer.cancel();
         }
         if (msec / 1000 > 10) {
-            mTimerView.setTextColor(Color.BLACK);
+            mTimerView.setTextColor(R.color.textColor);
         }
         mCountDownTimer = new CountDownTimer(msec, 1000) {
             @Override
@@ -89,9 +116,8 @@ public class GameActivity extends ActionBarActivity {
                                                  msecondsLeft / 1000 / 60,
                                                  msecUntilFinished));
                 if (msecondsLeft / 1000 <= 10) {
-                    mTimerView.setTextColor(Color.RED);
+                    mTimerView.setTextColor(getResources().getColor(R.color.redTimer));
                 }
-                //Log.d(MathActivity.TAG, Long.toString(msecUntilFinished));
             }
 
             @Override
@@ -104,10 +130,11 @@ public class GameActivity extends ActionBarActivity {
     }
 
     protected void newExercise() {
-        //Log.d(MathActivity.TAG, "newExercise, operation is " + radio_operation);
+        mExerciseView.startAnimation(animFadeOut);
         exercise = mode.newExercise(level);
         mExerciseView.setText(exercise.question());
         exercises.add(exercise);
+        mExerciseView.startAnimation(animFadeIn);
     }
 
     public void sendAnswer(View view) {
@@ -119,11 +146,32 @@ public class GameActivity extends ActionBarActivity {
 
         mAnswerEditText.setText("");
 
+        Animation imageFadeIn = new AlphaAnimation(0.0f, 1.0f);
+        Animation imageFadeOut = new AlphaAnimation(1.0f, 0.0f);
+
+        imageFadeIn.setDuration(1000);
+        imageFadeOut.setDuration(1000);
+
         if (exercise.answer(answer)) {
             newCountDownTimer(msecondsLeft + 2040);
             ++rightAnswers;
+            mExtraTimeView.setVisibility(View.VISIBLE);
+            mExtraTimeView.startAnimation(imageFadeOut);
+            mExtraTimeView.setVisibility(View.INVISIBLE);
+
+            mSendButton.startAnimation(imageFadeOut);
+            mAcceptImage.setVisibility(View.VISIBLE);
+            mAcceptImage.startAnimation(imageFadeOut);
+            mAcceptImage.setVisibility(View.INVISIBLE);
+            mSendButton.startAnimation(imageFadeIn);
         } else {
             ++wrongAnswers;
+
+            mSendButton.startAnimation(imageFadeOut);
+            mRejectImage.setVisibility(View.VISIBLE);
+            mRejectImage.startAnimation(imageFadeOut);
+            mRejectImage.setVisibility(View.INVISIBLE);
+            mSendButton.startAnimation(imageFadeIn);
         }
         mRightAnswersView.setText(Integer.toString(rightAnswers));
         mWrongAnswersView.setText(Integer.toString(wrongAnswers));

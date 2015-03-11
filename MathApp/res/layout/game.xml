@@ -9,24 +9,47 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     >
+
   <TextView
-      android:id="@+id/timer_textview"
+      android:id="@+id/gametype_textview"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentTop="true"
+      android:text=""
+      style="?android:attr/listSeparatorTextViewStyle"
+      android:paddingBottom="8sp"
+      />
+
+  <TextView
+      android:id="@+id/extratime_textview"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="00:00"
-      android:textSize="40dp"
+      android:layout_alignBaseline="@+id/timer_textview"
+      android:layout_toLeftOf="@+id/timer_textview"
+      android:textSize="@dimen/extraTimer_fontSize"
+      android:text="+ 2 sec "
+      android:textColor="@color/acceptGreen"
+      android:visibility="invisible"
+      />
+
+  <TextView
+      android:id="@id/timer_textview"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_alignParentRight="true"
-      android:fontFamily="sans-serif-thin"
+      android:layout_alignParentTop="true"
+      android:textSize="31sp"
+      android:text="00:00"
       />
 
   <TextView
       android:id="@+id/exercise_textview"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_below="@id/timer_textview"
+      android:layout_below="@id/gametype_textview"
       android:layout_toLeftOf="@+id/answer_edittext"
-      android:layout_alignParentLeft="false"
-      android:layout_alignWithParentIfMissing="false"
+      android:layout_marginTop="@dimen/vertical_distance_exercise"
       android:text="@string/exercise_start"
       android:textSize="@dimen/exercise_textSize"
       android:fontFamily="sans-serif"
@@ -39,7 +62,7 @@
       android:layout_toLeftOf="@+id/send_button"
       android:hint="@string/answer"
       android:inputType="number"
-      android:digits="0123456789.kmb"
+      android:digits="0123456789.kmbKMB"
       android:imeOptions="actionSend"
       android:textSize="@dimen/exercise_textSize"
       />
@@ -55,6 +78,26 @@
       android:cropToPadding="false"
       android:onClick="sendAnswer"
       style="?android:attr/borderlessButtonStyle"
+      />
+  <ImageView
+      android:id="@+id/accept_image"
+      android:layout_width="@dimen/send_button_size"
+      android:layout_height="@dimen/send_button_size"
+      android:layout_alignLeft="@id/send_button"
+      android:layout_alignTop="@id/send_button"
+      android:src="@drawable/ic_action_accept"
+      android:visibility="invisible"
+      android:tint="@color/acceptGreen"
+      />
+  <ImageView
+      android:id="@+id/reject_image"
+      android:layout_width="@dimen/send_button_size"
+      android:layout_height="@dimen/send_button_size"
+      android:layout_alignLeft="@id/send_button"
+      android:layout_alignTop="@id/send_button"
+      android:src="@drawable/ic_action_cancel"
+      android:visibility="invisible"
+      android:tint="@color/redTimer"
       />
 
   <!--<Space

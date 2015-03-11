@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.SpinnerAdapter;
 import android.widget.ArrayAdapter;
@@ -79,6 +81,9 @@ public class MathActivity extends ActionBarActivity
         }
     }
 
+    private Animation animFadeIn;
+    private Animation animFadeOut;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -86,6 +91,14 @@ public class MathActivity extends ActionBarActivity
         setContentView(R.layout.main);
 
         intent = new Intent(this, GameActivity.class);
+
+        animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(),
+                                                  R.anim.fade_in);
+        animFadeOut = AnimationUtils.loadAnimation(getApplicationContext(),
+                                                   R.anim.fade_out);
+
+        animFadeOut.setDuration(100);
+        animFadeIn.setDuration(700);
 
         setButtonText();
 
@@ -126,13 +139,19 @@ public class MathActivity extends ActionBarActivity
         intent.putExtra(Exercise.Level.TAG, level);
         intent.putExtra(Mode.TAG, mode);
         startActivity(intent);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     private void setButtonText() {
         TextView button = (TextView) findViewById(R.id.button_start_game);
         String text = "Start new " + level.toString() + " " +
             mode.toString() + " game";
-        button.setText(text);
+
+        if (!text.equals(button.getText())) {
+            button.startAnimation(animFadeOut);
+            button.setText(text);
+            button.startAnimation(animFadeIn);
+        }
     }
 
     @Override
