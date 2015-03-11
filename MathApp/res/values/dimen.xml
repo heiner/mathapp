@@ -7,4 +7,5 @@
   <dimen name="activity_horizontal_margin">10dp</dimen>
   <dimen name="extra_horizontal_margin">20dp</dimen>
   <dimen name="vertical_distance_start_button">2dp</dimen>
+  <dimen name="send_button_size">42dp</dimen>
 </resources>
