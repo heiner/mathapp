@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.SpinnerAdapter;
 import android.widget.ArrayAdapter;
 
@@ -18,41 +18,63 @@ import android.support.v7.app.ActionBar;
 public class MathActivity extends ActionBarActivity
 {
     static final String TAG = "MathApp";
-    public final static String EXTRA_MESSAGE = "org.kuettler.mathapp.MESSAGE";
+    public final static String LEVEL = "org.kuettler.mathapp.LEVEL";
+    public final static String OPERATION = "org.kuettler.mathapp.OPERATION";
 
-    /** Called when the activity is first created. */
+    private Intent intent;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        SpinnerAdapter mSpinnerAdapter =
-            ArrayAdapter.createFromResource(this, R.array.action_list,
-                                            android.R.layout.simple_spinner_dropdown_item);
-        ActionBar.OnNavigationListener mOnNavigationListener =
-            new ActionBar.OnNavigationListener() {
-                @Override
-                public boolean onNavigationItemSelected(int position, long itemId) {
-                    return true;
-                }
-            };
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        getSupportActionBar().setListNavigationCallbacks(mSpinnerAdapter,
-                                                         mOnNavigationListener);
+        intent = new Intent(this, GameActivity.class);
+
+        // Default values
+        intent.putExtra(LEVEL, R.id.radio_easy);
+        intent.putExtra(OPERATION, R.id.radio_random);
+
+        setButtonText();
+
+        // SpinnerAdapter mSpinnerAdapter =
+        //     ArrayAdapter.createFromResource(this, R.array.action_list,
+        //                                     android.R.layout.simple_spinner_dropdown_item);
+        // ActionBar.OnNavigationListener mOnNavigationListener =
+        //     new ActionBar.OnNavigationListener() {
+        //         @Override
+        //         public boolean onNavigationItemSelected(int position, long itemId) {
+        //             return true;
+        //         }
+        //     };
+        // getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        // getSupportActionBar().setListNavigationCallbacks(mSpinnerAdapter,
+        //                                                  mOnNavigationListener);
+    }
+
+    public void setLevel(View view) {
+        intent.putExtra(LEVEL, view.getId());
+        setButtonText();
+    }
+
+    public void setOperation(View view) {
+        //Log.d(TAG, "setOperation " + view.getId());
+        intent.putExtra(OPERATION, view.getId());
+        setButtonText();
     }
 
     public void startGame(View view) {
-        // Do something in response to button
-        Intent intent = new Intent(this, GameActivity.class);
-        //Log.d(TAG, Integer.toString(R.id.edit_message));
-        //EditText editText = (EditText) findViewById(R.id.edit_message);
-        //if (editText == null) {
-        //    Log.d(TAG, "findViewById(R.id.edit_message) returned null");
-        //}
-        //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
+        //if (intent.hasExtra(LEVEL) && intent.hasExtra(OPERATION)) { }
         startActivity(intent);
+    }
+
+    private void setButtonText() {
+        TextView button = (TextView) findViewById(R.id.button_start_game);
+        if (intent.getIntExtra(OPERATION, R.id.radio_random) == R.id.radio_random) {
+            button.setText("Start new random game");
+        } else {
+            button.setText(R.string.button_start_game);
+        }
     }
 
     @Override

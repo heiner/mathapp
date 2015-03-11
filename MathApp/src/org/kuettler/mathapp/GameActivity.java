@@ -2,6 +2,8 @@ package org.kuettler.mathapp;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -29,18 +31,40 @@ public class GameActivity extends ActionBarActivity {
     private TextView mRightAnswersView;
     private TextView mWrongAnswersView;
 
-    private Exercise.Level level;
     private final List<Exercise> exercises = new LinkedList<Exercise>();
     private Exercise exercise;
     private int rightAnswers = 0;
     private int wrongAnswers = 0;
     private int msecondsLeft;
 
+    private Exercise.Level level;
+    private int radio_operation;
+
+    private static final Map<Integer, Exercise.Level> idsToLevels =
+        new HashMap<Integer, Exercise.Level>();
+    private static final Map<Integer, Exercise.Operation> idsToOperations =
+        new HashMap<Integer, Exercise.Operation>();
+    static {
+        idsToLevels.put(R.id.radio_easy, Exercise.Level.EASY);
+        idsToLevels.put(R.id.radio_medium, Exercise.Level.MEDIUM);
+        idsToLevels.put(R.id.radio_hard, Exercise.Level.HARD);
+        idsToLevels.put(R.id.radio_estimation, Exercise.Level.ESTIMATION);
+
+        idsToOperations.put(R.id.radio_plus, Exercise.Operation.PLUS);
+        idsToOperations.put(R.id.radio_minus, Exercise.Operation.MINUS);
+        idsToOperations.put(R.id.radio_times, Exercise.Operation.TIMES);
+        idsToOperations.put(R.id.radio_divide, Exercise.Operation.DIVIDE);
+        idsToOperations.put(R.id.radio_percent, Exercise.Operation.PERCENT_OF);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        String message = intent.getStringExtra(MathActivity.EXTRA_MESSAGE);
+        level = idsToLevels.get(intent.getIntExtra(MathActivity.LEVEL,
+                                                   R.id.radio_easy));
+        radio_operation = intent.getIntExtra(MathActivity.OPERATION,
+                                             R.id.radio_random);
 
         // Set the text view as the activity layout
         setContentView(R.layout.game);
@@ -65,7 +89,6 @@ public class GameActivity extends ActionBarActivity {
                 }
             });
 
-        level = Exercise.Level.EASY;
         newExercise();
         newCountDownTimer(60200);
     }
@@ -73,6 +96,9 @@ public class GameActivity extends ActionBarActivity {
     protected CountDownTimer newCountDownTimer(long msec) {
         if (mCountDownTimer != null) {
             mCountDownTimer.cancel();
+        }
+        if (msec / 1000 > 10) {
+            mTimerView.setTextColor(Color.BLACK);
         }
         mCountDownTimer = new CountDownTimer(msec, 1000) {
             @Override
@@ -84,7 +110,7 @@ public class GameActivity extends ActionBarActivity {
                 if (msecondsLeft / 1000 <= 10) {
                     mTimerView.setTextColor(Color.RED);
                 }
-                Log.d(MathActivity.TAG, Long.toString(msecUntilFinished));
+                //Log.d(MathActivity.TAG, Long.toString(msecUntilFinished));
             }
 
             @Override
@@ -97,7 +123,15 @@ public class GameActivity extends ActionBarActivity {
     }
 
     protected void newExercise() {
-        exercise = Exercise.Operation.newRandomExercise(level);
+        //Log.d(MathActivity.TAG, "newExercise, operation is " + radio_operation);
+        if (idsToOperations.containsKey(radio_operation)) {
+            exercise = idsToOperations.get(radio_operation).newExercise(level);
+        } else if (radio_operation == R.id.radio_random) {
+            exercise = Exercise.Operation.newRandomExercise(level);
+        } else {
+            new IllegalStateException();
+        }
+
         mExerciseView.setText(exercise.question());
         exercises.add(exercise);
     }
