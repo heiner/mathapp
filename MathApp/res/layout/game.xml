@@ -37,6 +37,7 @@
       android:layout_toRightOf="@id/exercise_textview"
       android:hint="@string/answer"
       android:inputType="number"
+      android:digits="0123456789.kmb"
       android:imeOptions="actionSend"
       android:textSize="@dimen/exercise_textSize"
       android:layout_centerHorizontal="true"

@@ -258,7 +258,7 @@ class Exercise {
         case DIVIDE:
             return String.format("%dk%s%d = ", lhs/1000, operation, rhs);
         case PERCENT_OF:
-            return String.format("%d%s%d = ", lhs, operation, rhs/1000);
+            return String.format("%d%s%.2fk = ", lhs, operation, rhs/1000.0);
         default:
             return null;
         }
