@@ -94,7 +94,7 @@ public class GameActivity extends ActionBarActivity {
                                                    R.anim.fade_out);
         animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(),
                                                   R.anim.fade_in);
-        animFadeOut.setDuration(1000);
+        animFadeOut.setDuration(800);
         animFadeIn.setDuration(500);
 
         mGameTypeView.setText(level.toString() + "\n" + mode.toString());
@@ -142,6 +142,7 @@ public class GameActivity extends ActionBarActivity {
             public void onFinish() {
                 msecondsLeft = 0;
                 mTimerView.setText("0:00");
+                gameOver();
             }
         };
         return mCountDownTimer.start();
@@ -170,51 +171,6 @@ public class GameActivity extends ActionBarActivity {
         imageFadeIn.setDuration(1000);
         imageFadeOut.setDuration(1000);
 
-        RelativeLayout resultsLayout =
-            (RelativeLayout) findViewById(R.id.rolling_results_relativelayout);
-
-        TextView entry = new TextView(this);
-
-        int entryId = rightAnswers + wrongAnswers + 1;
-        entry.setId(entryId);
-
-        RelativeLayout.LayoutParams lp_left =
-            new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                                            RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-        if (entryId == 1) {
-            lp_left.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        } else {
-            lp_left.addRule(RelativeLayout.BELOW, entryId - 1);
-        }
-
-        RelativeLayout.LayoutParams lp_middle = new RelativeLayout.LayoutParams(lp_left);
-        RelativeLayout.LayoutParams lp_right = new RelativeLayout.LayoutParams(lp_left);
-
-        if (entryId == 1) {
-            lp_left.addRule(RelativeLayout.ALIGN_LEFT, R.id.fake_question_entry);
-            lp_middle.addRule(RelativeLayout.ALIGN_RIGHT, R.id.fake_answer_entry);
-                    lp_right.addRule(RelativeLayout.ALIGN_RIGHT, R.id.fake_user_answer_entry);
-        } else {
-            lp_left.addRule(RelativeLayout.ALIGN_LEFT, 1);
-            lp_middle.addRule(RelativeLayout.ALIGN_RIGHT, 10001);
-            lp_right.addRule(RelativeLayout.ALIGN_RIGHT, 20001);
-        }
-
-        entry.setLayoutParams(lp_left);
-        entry.setText(exercise.getPlainQuestion());
-        resultsLayout.addView(entry);
-
-        entry = new TextView(this);
-        entry.setId(entryId + 10000);
-        entry.setLayoutParams(lp_middle);
-        entry.setText(exercise.formatedSolution());
-        resultsLayout.addView(entry);
-
-        entry = new TextView(this);
-        entry.setId(entryId + 20000);
-        entry.setLayoutParams(lp_right);
-
         if (exercise.answer(answer)) {
             newCountDownTimer(msecondsLeft + 2040);
             ++rightAnswers;
@@ -227,8 +183,6 @@ public class GameActivity extends ActionBarActivity {
             mAcceptImage.startAnimation(imageFadeOut);
             mAcceptImage.setVisibility(View.INVISIBLE);
             mSendButton.startAnimation(imageFadeIn);
-
-            entry.setTextColor(getResources().getColor(R.color.acceptGreen));
         } else {
             ++wrongAnswers;
 
@@ -237,13 +191,72 @@ public class GameActivity extends ActionBarActivity {
             mRejectImage.startAnimation(imageFadeOut);
             mRejectImage.setVisibility(View.INVISIBLE);
             mSendButton.startAnimation(imageFadeIn);
-
-            entry.setTextColor(getResources().getColor(R.color.redTimer));
         }
         if (answer.length() > 10) {
             answer = answer.substring(0,10) + "...";
         }
+
+        addToResults(rightAnswers + wrongAnswers, exercise.getPlainQuestion(),
+                     exercise.formatedSolution(), answer,
+                     exercise.givenAnswerCorrect() ?
+                     R.color.acceptGreen : R.color.redTimer);
+
+        updateRightWrongPoints();
+        newExercise();
+    }
+
+    private void addToResults(int entryNo, String question, String answer,
+                              String userAnswer, int colorId) {
+        final RelativeLayout resultsLayout =
+            (RelativeLayout) findViewById(R.id.rolling_results_relativelayout);
+
+        TextView entry = new TextView(this);
+
+        int entryId = entryNo;
+        entry.setId(entryId);
+
+        final RelativeLayout.LayoutParams lp_left =
+            new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                            RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        if (entryId == 1) {
+            lp_left.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        } else {
+            lp_left.addRule(RelativeLayout.BELOW, entryId - 1);
+        }
+
+        final RelativeLayout.LayoutParams lp_middle = new RelativeLayout.LayoutParams(lp_left);
+        final RelativeLayout.LayoutParams lp_right = new RelativeLayout.LayoutParams(lp_left);
+
+        if (entryId == 1) {
+            lp_left.addRule(RelativeLayout.ALIGN_LEFT, R.id.fake_question_entry);
+            lp_middle.addRule(RelativeLayout.ALIGN_RIGHT, R.id.fake_answer_entry);
+                    lp_right.addRule(RelativeLayout.ALIGN_RIGHT, R.id.fake_user_answer_entry);
+        } else {
+            lp_left.addRule(RelativeLayout.ALIGN_LEFT, 1);
+            lp_middle.addRule(RelativeLayout.ALIGN_RIGHT, 10001);
+            lp_right.addRule(RelativeLayout.ALIGN_RIGHT, 20001);
+        }
+
+        entry.setLayoutParams(lp_left);
+        entry.setText(question);
+        resultsLayout.addView(entry);
+
+        entry = new TextView(this);
+        entry.setId(entryId + 10000);
+        entry.setLayoutParams(lp_middle);
         entry.setText(answer);
+        resultsLayout.addView(entry);
+
+        if (userAnswer.isEmpty())
+            return;
+
+        entry = new TextView(this);
+        entry.setId(entryId + 20000);
+        entry.setLayoutParams(lp_right);
+
+        entry.setTextColor(getResources().getColor(colorId));
+        entry.setText(userAnswer);
         resultsLayout.addView(entry);
 
         final ScrollView resultsScrollView =
@@ -255,9 +268,6 @@ public class GameActivity extends ActionBarActivity {
                  resultsScrollView.fullScroll(ScrollView.FOCUS_DOWN);
              }
         });
-
-        updateRightWrongPoints();
-        newExercise();
     }
 
     private void updateRightWrongPoints() {
@@ -303,6 +313,41 @@ public class GameActivity extends ActionBarActivity {
             answer = answer.subSequence(0, answer.length() - 1);
         }
         mAnswerEditText.setTextKeepState(answer.toString() + suffix);
+    }
+
+    void gameOver() {
+        Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(),
+                                                         R.anim.slide_up);
+        final View newGameButton = findViewById(R.id.restart_button);
+        addToResults(rightAnswers + wrongAnswers + 1, exercise.getPlainQuestion(),
+                     exercise.formatedSolution(), "", 0);
+
+        slideUp.setFillAfter(true);
+        slideUp.setAnimationListener(new Animation.AnimationListener() {
+            @Override public void onAnimationEnd(Animation animation) {
+                mExerciseView.setVisibility(View.GONE);
+                mAnswerEditText.setVisibility(View.GONE);
+                mSendButton.setVisibility(View.GONE);
+            }
+            @Override public void onAnimationRepeat(Animation animation) {}
+            @Override public void onAnimationStart(Animation animation) {}
+        });
+        if (level == Exercise.Level.ESTIMATION) {
+            View kButton = findViewById(R.id.k_button);
+            View mButton = findViewById(R.id.m_button);
+            kButton.startAnimation(slideUp);
+            mButton.startAnimation(slideUp);
+        }
+        mExerciseView.startAnimation(slideUp);
+        mAnswerEditText.startAnimation(slideUp);
+        mSendButton.startAnimation(slideUp);
+        mTimerView.startAnimation(animFadeOut);
+        newGameButton.startAnimation(animFadeIn);
+    }
+
+    public void restart(View view) {
+        mAnswerEditText.setText(""); // why do I need that?
+        recreate();
     }
 
     @Override

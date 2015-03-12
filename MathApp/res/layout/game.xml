@@ -33,6 +33,21 @@
       android:visibility="invisible"
       />
 
+  <ImageButton
+      android:id="@+id/restart_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentTop="true"
+      android:visibility="invisible"
+      android:src="@drawable/ic_action_refresh"
+      android:scaleType="fitXY"
+      android:adjustViewBounds="true"
+      android:cropToPadding="false"
+      android:onClick="restart"
+      style="?android:attr/borderlessButtonStyle"
+      />
+
   <TextView
       android:id="@id/timer_textview"
       android:layout_width="wrap_content"
@@ -69,6 +84,7 @@
       android:imeOptions="actionSend"
       android:textSize="@dimen/exercise_textSize"
       android:singleLine="true"
+      android:text=""
       />
   <ImageButton
       android:id="@id/send_button"
