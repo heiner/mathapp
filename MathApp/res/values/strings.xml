@@ -24,4 +24,7 @@
   <string name="divide">⁄</string>
   <string name="percent">%</string>
   <string name="random">Random</string>
+  <string name="question_header">Question</string>
+  <string name="answer_header">Solution</string>
+  <string name="user_answer_header">Your answer</string>
 </resources>

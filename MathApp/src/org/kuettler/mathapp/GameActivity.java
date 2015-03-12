@@ -161,24 +161,33 @@ public class GameActivity extends ActionBarActivity {
         RelativeLayout resultsLayout =
             (RelativeLayout) findViewById(R.id.rolling_results_relativelayout);
 
-        View questionEntry = findViewById(R.id.example_question_entry);
-        View answerEntry = findViewById(R.id.example_answer_entry);
-        View userAnswerEntry = findViewById(R.id.example_user_answer_entry);
+        View questionEntry = findViewById(R.id.fake_question_entry);
+        //View answerEntry = findViewById(R.id.fake_answer_entry);
+        View userAnswerEntry = findViewById(R.id.fake_user_answer_entry);
 
         TextView entry = new TextView(this);
 
         int entryId = rightAnswers + wrongAnswers + 1;
         entry.setId(entryId);
 
-        int lastId = entryId - 1;
-        if (lastId == 0)
-            lastId = R.id.question_header;
+        RelativeLayout.LayoutParams lp_left =
+            new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                            RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-        RelativeLayout.LayoutParams layoutParams =
-            (RelativeLayout.LayoutParams) questionEntry.getLayoutParams();
-        layoutParams = new RelativeLayout.LayoutParams(layoutParams);
-        layoutParams.addRule(RelativeLayout.BELOW, lastId);
-        entry.setLayoutParams(layoutParams);
+        if (entryId == 1) {
+            lp_left.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        } else {
+            lp_left.addRule(RelativeLayout.BELOW, entryId - 1);
+        }
+
+        RelativeLayout.LayoutParams lp_middle = new RelativeLayout.LayoutParams(lp_left);
+        RelativeLayout.LayoutParams lp_right = new RelativeLayout.LayoutParams(lp_left);
+
+        lp_left.addRule(RelativeLayout.ALIGN_LEFT, R.id.fake_question_entry);
+        lp_middle.addRule(RelativeLayout.ALIGN_RIGHT, R.id.fake_answer_entry);
+        lp_right.addRule(RelativeLayout.ALIGN_RIGHT, R.id.fake_user_answer_entry);
+
+        entry.setLayoutParams(lp_left);
 
         entry.setPadding(questionEntry.getPaddingLeft(),
                          questionEntry.getPaddingTop(),
@@ -189,20 +198,12 @@ public class GameActivity extends ActionBarActivity {
         resultsLayout.addView(entry);
 
         entry = new TextView(this);
-
-        layoutParams = (RelativeLayout.LayoutParams) answerEntry.getLayoutParams();
-        layoutParams = new RelativeLayout.LayoutParams(layoutParams);
-        layoutParams.addRule(RelativeLayout.BELOW, lastId);
-        entry.setLayoutParams(layoutParams);
-
+        entry.setLayoutParams(lp_middle);
         entry.setText(exercise.formatedSolution());
         resultsLayout.addView(entry);
 
         entry = new TextView(this);
-        layoutParams = (RelativeLayout.LayoutParams) userAnswerEntry.getLayoutParams();
-        layoutParams = new RelativeLayout.LayoutParams(layoutParams);
-        layoutParams.addRule(RelativeLayout.BELOW, lastId);
-        entry.setLayoutParams(layoutParams);
+        entry.setLayoutParams(lp_right);
 
         entry.setPadding(userAnswerEntry.getPaddingLeft(),
                          userAnswerEntry.getPaddingTop(),

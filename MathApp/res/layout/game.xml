@@ -189,14 +189,47 @@
       android:paddingRight="8dp"
       />
 
+  <TextView
+      android:id="@+id/question_header_visible"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_below="@id/right_answers_number"
+      android:text="@string/question_header"
+      style="?android:attr/listSeparatorTextViewStyle"
+      />
+  <TextView
+      android:id="@+id/answer_header_visible"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true"
+      android:layout_alignBaseline="@id/question_header_visible"
+      android:text="@string/answer_header"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      android:textAllCaps="true"
+      android:textColor="@color/textColor"
+      />
+  <TextView
+      android:id="@+id/user_answer_header_visible"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:layout_alignBaseline="@id/question_header_visible"
+      android:text="@string/user_answer_header"
+      android:textSize="14sp"
+      android:textAllCaps="true"
+      android:textStyle="bold"
+      android:paddingRight="8dip"
+      />
+
   <ScrollView
     android:id="@+id/rolling_results_scrollview"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:scrollbars="vertical"
     android:fillViewport="true"
-    android:layout_marginTop="@dimen/vertical_distance_results"
-    android:layout_below="@id/right_answers_number"
+    android:layout_below="@id/question_header_visible"
     >
     <RelativeLayout
         android:id="@+id/rolling_results_relativelayout"
@@ -204,67 +237,42 @@
         android:layout_height="fill_parent"
         >
       <TextView
-          android:id="@+id/question_header"
+          android:id="@+id/fake_question_entry"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
           android:layout_alignParentLeft="true"
           android:layout_alignParentTop="true"
-          android:text="Question"
+          android:text="@string/question_header"
           style="?android:attr/listSeparatorTextViewStyle"
           android:layout_weight="1.0"
+          android:visibility="invisible"
           />
       <TextView
-          android:id="@+id/answer_header"
+          android:id="@+id/fake_answer_entry"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerHorizontal="true"
-          android:layout_alignBaseline="@id/question_header"
-          android:text="Solution"
+          android:layout_alignBaseline="@id/fake_question_entry"
+          android:text="@string/answer_header"
           android:textSize="14sp"
           android:textStyle="bold"
           android:textAllCaps="true"
           android:textColor="@color/textColor"
+          android:visibility="invisible"
           />
       <TextView
-          android:id="@+id/user_answer_header"
+          android:id="@+id/fake_user_answer_entry"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentRight="true"
-          android:layout_alignBaseline="@id/question_header"
-          android:text="Your answer"
+          android:layout_alignBaseline="@id/fake_question_entry"
+          android:text="@string/user_answer_header"
           android:textSize="14sp"
           android:textAllCaps="true"
           android:textStyle="bold"
           android:paddingRight="8dip"
+          android:visibility="invisible"
           />
-
-      <TextView
-          android:id="@+id/example_question_entry"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignLeft="@id/question_header"
-          android:text=""
-          android:paddingLeft="8dip"
-          android:visibility="gone"
-          />
-      <TextView
-          android:id="@+id/example_answer_entry"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignRight="@id/answer_header"
-          android:text=""
-          android:visibility="gone"
-          />
-      <TextView
-          android:id="@+id/example_user_answer_entry"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignRight="@id/user_answer_header"
-          android:paddingRight="8dip"
-          android:text=""
-          android:visibility="gone"
-          />
-
     </RelativeLayout>
   </ScrollView>
 </RelativeLayout>
