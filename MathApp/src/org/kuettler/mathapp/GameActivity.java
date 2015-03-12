@@ -161,10 +161,6 @@ public class GameActivity extends ActionBarActivity {
         RelativeLayout resultsLayout =
             (RelativeLayout) findViewById(R.id.rolling_results_relativelayout);
 
-        View questionEntry = findViewById(R.id.fake_question_entry);
-        //View answerEntry = findViewById(R.id.fake_answer_entry);
-        View userAnswerEntry = findViewById(R.id.fake_user_answer_entry);
-
         TextView entry = new TextView(this);
 
         int entryId = rightAnswers + wrongAnswers + 1;
@@ -183,34 +179,31 @@ public class GameActivity extends ActionBarActivity {
         RelativeLayout.LayoutParams lp_middle = new RelativeLayout.LayoutParams(lp_left);
         RelativeLayout.LayoutParams lp_right = new RelativeLayout.LayoutParams(lp_left);
 
-        lp_left.addRule(RelativeLayout.ALIGN_LEFT, R.id.fake_question_entry);
-        lp_middle.addRule(RelativeLayout.ALIGN_RIGHT, R.id.fake_answer_entry);
-        lp_right.addRule(RelativeLayout.ALIGN_RIGHT, R.id.fake_user_answer_entry);
+        if (entryId == 1) {
+            lp_left.addRule(RelativeLayout.ALIGN_LEFT, R.id.fake_question_entry);
+            lp_middle.addRule(RelativeLayout.ALIGN_RIGHT, R.id.fake_answer_entry);
+                    lp_right.addRule(RelativeLayout.ALIGN_RIGHT, R.id.fake_user_answer_entry);
+        } else {
+            lp_left.addRule(RelativeLayout.ALIGN_LEFT, 1);
+            lp_middle.addRule(RelativeLayout.ALIGN_RIGHT, 10001);
+            lp_right.addRule(RelativeLayout.ALIGN_RIGHT, 20001);
+        }
 
         entry.setLayoutParams(lp_left);
-
-        entry.setPadding(questionEntry.getPaddingLeft(),
-                         questionEntry.getPaddingTop(),
-                         questionEntry.getPaddingRight(),
-                         questionEntry.getPaddingBottom());
-
         entry.setText(exercise.getPlainQuestion());
         resultsLayout.addView(entry);
 
         entry = new TextView(this);
+        entry.setId(entryId + 10000);
         entry.setLayoutParams(lp_middle);
         entry.setText(exercise.formatedSolution());
         resultsLayout.addView(entry);
 
         entry = new TextView(this);
+        entry.setId(entryId + 20000);
         entry.setLayoutParams(lp_right);
-
-        entry.setPadding(userAnswerEntry.getPaddingLeft(),
-                         userAnswerEntry.getPaddingTop(),
-                         userAnswerEntry.getPaddingRight(),
-                         userAnswerEntry.getPaddingBottom());
-
         entry.setText(answer);
+        resultsLayout.addView(entry);
 
         if (exercise.answer(answer)) {
             newCountDownTimer(msecondsLeft + 2040);
@@ -237,8 +230,6 @@ public class GameActivity extends ActionBarActivity {
 
             entry.setTextColor(getResources().getColor(R.color.redTimer));
         }
-
-        resultsLayout.addView(entry);
 
         ScrollView resultsScrollView =
             (ScrollView) findViewById(R.id.rolling_results_scrollview);

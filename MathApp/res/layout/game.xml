@@ -154,8 +154,7 @@
       android:id="@+id/wrong_answers_number"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_marginLeft="@dimen/margin_wrong_stat_distance"
+      android:layout_alignLeft="@+id/answer_header_visible"
       android:layout_alignBaseline="@id/right_answers_number"
       android:text="0"
       android:textStyle="bold"
@@ -235,6 +234,8 @@
         android:id="@+id/rolling_results_relativelayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         >
       <TextView
           android:id="@+id/fake_question_entry"
