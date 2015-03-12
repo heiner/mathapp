@@ -195,7 +195,7 @@ public class GameActivity extends ActionBarActivity {
         layoutParams.addRule(RelativeLayout.BELOW, lastId);
         entry.setLayoutParams(layoutParams);
 
-        entry.setText(Integer.toString(exercise.solution()));
+        entry.setText(exercise.formatedSolution());
         resultsLayout.addView(entry);
 
         entry = new TextView(this);

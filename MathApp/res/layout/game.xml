@@ -42,7 +42,7 @@
       android:textSize="@dimen/timer_textSize"
       android:text="00:00"
       android:paddingRight="8dp"
-      android:paddingBottom="1dp"
+      android:paddingBottom="4dp"
       />
 
   <TextView
@@ -67,6 +67,7 @@
       android:digits="0123456789.kmbKMB"
       android:imeOptions="actionSend"
       android:textSize="@dimen/exercise_textSize"
+      android:singleLine="true"
       />
   <ImageButton
       android:id="@id/send_button"

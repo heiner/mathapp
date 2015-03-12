@@ -215,6 +215,18 @@ class Exercise {
         return operation.apply(lhs, rhs);
     }
 
+    protected String formatedSolution() {
+        if (level != Level.ESTIMATION) { //  || solution() < 1000
+            return Integer.toString(solution());
+        }
+        float s = solution() / 1000.0f;
+        if (s < 1000) {
+            return String.format("%.2fK", s);
+        } else {
+            return String.format("%.2fM", s/1000);
+        }
+    }
+
     private static final Map<Character, Integer> suffixes =
         new HashMap<Character, Integer>();
     static {
