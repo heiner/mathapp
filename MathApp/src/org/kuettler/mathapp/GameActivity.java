@@ -78,6 +78,18 @@ public class GameActivity extends ActionBarActivity {
         mAcceptImage = findViewById(R.id.accept_image);
         mRejectImage = findViewById(R.id.reject_image);
 
+        if (level == Exercise.Level.ESTIMATION) {
+            View kButton = findViewById(R.id.k_button);
+            View mButton = findViewById(R.id.m_button);
+            kButton.setVisibility(View.VISIBLE);
+            mButton.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams lp =
+                (RelativeLayout.LayoutParams) mRightAnswersView.getLayoutParams();
+            lp.addRule(RelativeLayout.BELOW, kButton.getId());
+            lp.topMargin = 10;
+            mRightAnswersView.setLayoutParams(lp);
+        }
+
         animFadeOut = AnimationUtils.loadAnimation(getApplicationContext(),
                                                    R.anim.fade_out);
         animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(),
@@ -202,8 +214,6 @@ public class GameActivity extends ActionBarActivity {
         entry = new TextView(this);
         entry.setId(entryId + 20000);
         entry.setLayoutParams(lp_right);
-        entry.setText(answer);
-        resultsLayout.addView(entry);
 
         if (exercise.answer(answer)) {
             newCountDownTimer(msecondsLeft + 2040);
@@ -230,10 +240,21 @@ public class GameActivity extends ActionBarActivity {
 
             entry.setTextColor(getResources().getColor(R.color.redTimer));
         }
+        if (answer.length() > 10) {
+            answer = answer.substring(0,10) + "...";
+        }
+        entry.setText(answer);
+        resultsLayout.addView(entry);
 
-        ScrollView resultsScrollView =
+        final ScrollView resultsScrollView =
             (ScrollView) findViewById(R.id.rolling_results_scrollview);
-        resultsScrollView.fullScroll(View.FOCUS_DOWN);
+        // scrolling to very bottom harder than expected:
+        resultsScrollView.post(new Runnable() {
+             @Override
+             public void run() {
+                 resultsScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+             }
+        });
 
         updateRightWrongPoints();
         newExercise();

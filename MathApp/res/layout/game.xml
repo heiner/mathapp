@@ -65,6 +65,7 @@
       android:hint="@string/answer"
       android:inputType="number"
       android:digits="0123456789.kmbKMB"
+      android:maxLength="15"
       android:imeOptions="actionSend"
       android:textSize="@dimen/exercise_textSize"
       android:singleLine="true"
@@ -115,6 +116,7 @@
       android:textStyle="bold"
       android:textSize="@dimen/suffix_button_fontSize"
       android:textColor="@color/textColor"
+      android:visibility="gone"
       />
   <Button
       android:id="@+id/m_button"
@@ -128,6 +130,7 @@
       android:textStyle="bold"
       android:textSize="@dimen/suffix_button_fontSize"
       android:textColor="@color/textColor"
+      android:visibility="gone"
       />
 
   <TextView
@@ -137,7 +140,7 @@
       android:text="0"
       android:textStyle="bold"
       android:layout_marginTop="@dimen/vertical_distance_answer_stats"
-      android:layout_below="@id/k_button"
+      android:layout_below="@id/exercise_textview"
       android:layout_alignParentLeft="true"
       android:paddingLeft="8dp"
       />
