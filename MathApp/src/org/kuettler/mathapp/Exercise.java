@@ -253,6 +253,10 @@ class Exercise {
     }
 
     public String question() {
+        return getPlainQuestion() + " = ";
+    }
+
+    public String getPlainQuestion() {
         /*
           // for estimation, have "k" or smth.:
           Add: 211K + 221K
@@ -261,17 +265,17 @@ class Exercise {
           Perc: 92% of 2.42K
          */
         if (level != Level.ESTIMATION || operation == Operation.TIMES) {
-            return String.format("%d%s%d = ", lhs, operation, rhs);
+            return String.format("%d%s%d", lhs, operation, rhs);
         }
         switch (operation) {
         case PLUS: case MINUS:
-            return String.format("%dK%s%dK = ", lhs/1000, operation, rhs/1000);
+            return String.format("%dK%s%dK", lhs/1000, operation, rhs/1000);
         case DIVIDE:
-            return String.format("%dK%s%d = ", lhs/1000, operation, rhs);
+            return String.format("%dK%s%d", lhs/1000, operation, rhs);
         case PERCENT_OF:
-            return String.format("%d%s%.2fK = ", lhs, operation, rhs/1000.0);
+            return String.format("%d%s%.2fK", lhs, operation, rhs/1000.0);
         default:
-            return null;
+            throw new IllegalStateException();
         }
     }
 

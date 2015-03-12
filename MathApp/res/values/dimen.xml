@@ -15,4 +15,5 @@
   <dimen name="suffix_button_fontSize">14dp</dimen>
   <dimen name="vertical_distance_answer_stats">5dp</dimen>
   <dimen name="margin_wrong_stat_distance">140dp</dimen>
+  <dimen name="vertical_distance_results">10dp</dimen>
 </resources>

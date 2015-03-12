@@ -21,6 +21,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ScrollView;
+import android.widget.RelativeLayout;
 
 import android.util.Log;
 
@@ -156,6 +158,59 @@ public class GameActivity extends ActionBarActivity {
         imageFadeIn.setDuration(1000);
         imageFadeOut.setDuration(1000);
 
+        RelativeLayout resultsLayout =
+            (RelativeLayout) findViewById(R.id.rolling_results_relativelayout);
+
+        View questionEntry = findViewById(R.id.example_question_entry);
+        View answerEntry = findViewById(R.id.example_answer_entry);
+        View userAnswerEntry = findViewById(R.id.example_user_answer_entry);
+
+        TextView entry = new TextView(this);
+
+        int entryId = rightAnswers + wrongAnswers + 1;
+        entry.setId(entryId);
+
+        int lastId = entryId - 1;
+        if (lastId == 0)
+            lastId = R.id.question_header;
+
+        RelativeLayout.LayoutParams layoutParams =
+            (RelativeLayout.LayoutParams) questionEntry.getLayoutParams();
+        layoutParams = new RelativeLayout.LayoutParams(layoutParams);
+        layoutParams.addRule(RelativeLayout.BELOW, lastId);
+        entry.setLayoutParams(layoutParams);
+
+        entry.setPadding(questionEntry.getPaddingLeft(),
+                         questionEntry.getPaddingTop(),
+                         questionEntry.getPaddingRight(),
+                         questionEntry.getPaddingBottom());
+
+        entry.setText(exercise.getPlainQuestion());
+        resultsLayout.addView(entry);
+
+        entry = new TextView(this);
+
+        layoutParams = (RelativeLayout.LayoutParams) answerEntry.getLayoutParams();
+        layoutParams = new RelativeLayout.LayoutParams(layoutParams);
+        layoutParams.addRule(RelativeLayout.BELOW, lastId);
+        entry.setLayoutParams(layoutParams);
+
+        entry.setText(Integer.toString(exercise.solution()));
+        resultsLayout.addView(entry);
+
+        entry = new TextView(this);
+        layoutParams = (RelativeLayout.LayoutParams) userAnswerEntry.getLayoutParams();
+        layoutParams = new RelativeLayout.LayoutParams(layoutParams);
+        layoutParams.addRule(RelativeLayout.BELOW, lastId);
+        entry.setLayoutParams(layoutParams);
+
+        entry.setPadding(userAnswerEntry.getPaddingLeft(),
+                         userAnswerEntry.getPaddingTop(),
+                         userAnswerEntry.getPaddingRight(),
+                         userAnswerEntry.getPaddingBottom());
+
+        entry.setText(answer);
+
         if (exercise.answer(answer)) {
             newCountDownTimer(msecondsLeft + 2040);
             ++rightAnswers;
@@ -168,6 +223,8 @@ public class GameActivity extends ActionBarActivity {
             mAcceptImage.startAnimation(imageFadeOut);
             mAcceptImage.setVisibility(View.INVISIBLE);
             mSendButton.startAnimation(imageFadeIn);
+
+            entry.setTextColor(getResources().getColor(R.color.acceptGreen));
         } else {
             ++wrongAnswers;
 
@@ -176,7 +233,15 @@ public class GameActivity extends ActionBarActivity {
             mRejectImage.startAnimation(imageFadeOut);
             mRejectImage.setVisibility(View.INVISIBLE);
             mSendButton.startAnimation(imageFadeIn);
+
+            entry.setTextColor(getResources().getColor(R.color.redTimer));
         }
+
+        resultsLayout.addView(entry);
+
+        ScrollView resultsScrollView =
+            (ScrollView) findViewById(R.id.rolling_results_scrollview);
+        resultsScrollView.fullScroll(View.FOCUS_DOWN);
 
         updateRightWrongPoints();
         newExercise();
