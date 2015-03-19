@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="custom_actionbar_color">#bb0000</color>
+  <color name="custom_actionbar_color">#7e7e7e</color>
+  <color name="actionbar_text">#eeeeee</color>
   <color name="send_button_color">#0000bb</color>
   <color name="black_tint">#323232</color>
   <color name="textColor">#737373</color>

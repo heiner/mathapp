@@ -11,17 +11,28 @@
   </style>
 
   <!-- ActionBar styles -->
-  <color name="custom_actionbar_color">#bb0000</color>
+  <color name="custom_actionbar_color">#7e7e7e</color>
   <style name="MyActionBar"
          parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-    <!--<item name="android:background">@color/custom_actionbar_color</item>-->
+    <item name="android:background">@color/custom_actionbar_color</item>
+    <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
 
     <!-- Support library compatibility -->
-    <!--<item name="background">@color/custom_actionbar_color</item>-->
+    <item name="background">@color/custom_actionbar_color</item>
+    <item name="titleTextStyle">@style/MyActionBarTitleText</item>
 
     <item name="android:height">@dimen/actionbar_height</item>
     <item name="height">@dimen/actionbar_height</item>
     <!--<item name="logo">@drawable/ic_launcher</item>
     <item name="displayOptions">useLogo|showHome|showTitle</item>-->
+  </style>
+
+  <!-- ActionBar title text -->
+  <style name="MyActionBarTitleText"
+         parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <item name="android:textColor">@color/actionbar_text</item>
+    <!-- property is backward compatible with the Support Library -->
+    <item name="android:textAllCaps">true</item>
+    <item name="textAllCaps">true</item>
   </style>
 </resources>

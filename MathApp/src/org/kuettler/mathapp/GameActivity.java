@@ -64,6 +64,7 @@ public class GameActivity extends ActionBarActivity {
 
         // Set the text view as the activity layout
         setContentView(R.layout.game);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         mGameTypeView = (TextView) findViewById(R.id.gametype_textview);
         mExtraTimeView = (TextView) findViewById(R.id.extratime_textview);
@@ -328,6 +329,7 @@ public class GameActivity extends ActionBarActivity {
                 mExerciseView.setVisibility(View.GONE);
                 mAnswerEditText.setVisibility(View.GONE);
                 mSendButton.setVisibility(View.GONE);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
             @Override public void onAnimationRepeat(Animation animation) {}
             @Override public void onAnimationStart(Animation animation) {}
@@ -356,7 +358,7 @@ public class GameActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
             return true;
         }
         return super.onOptionsItemSelected(item);
