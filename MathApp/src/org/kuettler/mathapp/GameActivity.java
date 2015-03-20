@@ -55,6 +55,8 @@ public class GameActivity extends ActionBarActivity {
     private Animation animFadeIn;
     private Animation animFadeOut;
 
+    private final int initalTime_msec = 60200;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,7 +119,7 @@ public class GameActivity extends ActionBarActivity {
             });
 
         newExercise();
-        newCountDownTimer(60200);
+        newCountDownTimer(initalTime_msec);
     }
 
     protected CountDownTimer newCountDownTimer(long msec) {
@@ -345,6 +347,32 @@ public class GameActivity extends ActionBarActivity {
         mSendButton.startAnimation(slideUp);
         mTimerView.startAnimation(animFadeOut);
         newGameButton.startAnimation(animFadeIn);
+
+        int extraTime = 2*rightAnswers;
+        float secondsPerAnswer = initalTime_msec/1000 + extraTime;
+        if (rightAnswers + wrongAnswers > 0) {
+            secondsPerAnswer /= rightAnswers + wrongAnswers;
+        }
+
+        final TextView totalQuestionsNo = (TextView) findViewById(R.id.total_questions_number);
+        final TextView extraSecNo = (TextView) findViewById(R.id.extra_seconds_number);
+        final TextView secPerAnswerNo = (TextView) findViewById(R.id.seconds_per_answer_number);
+
+        totalQuestionsNo.setText(Integer.toString(rightAnswers + wrongAnswers));
+        extraSecNo.setText(Integer.toString(extraTime));
+        secPerAnswerNo.setText(String.format("%.1f", secondsPerAnswer));
+
+        pluralifyView(R.id.total_questions_text, rightAnswers + wrongAnswers,
+                      R.string.total_questions_text);
+
+        for (View v : new View[]{totalQuestionsNo,
+                                 findViewById(R.id.total_questions_text),
+                                 extraSecNo,
+                                 findViewById(R.id.extra_seconds_text),
+                                 secPerAnswerNo,
+                                 findViewById(R.id.seconds_per_answer_text)}) {
+            v.startAnimation(animFadeIn);
+        }
     }
 
     public void restart(View view) {
