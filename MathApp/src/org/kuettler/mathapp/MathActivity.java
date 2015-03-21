@@ -102,6 +102,9 @@ public class MathActivity extends ActionBarActivity
 
         setButtonText();
 
+        Stat.getInstance().load(getApplicationContext());
+        Log.d(TAG, Stat.getInstance().toJSONObject().toString(2));
+
         // SpinnerAdapter mSpinnerAdapter =
         //     ArrayAdapter.createFromResource(this, R.array.action_list,
         //                                     android.R.layout.simple_spinner_dropdown_item);

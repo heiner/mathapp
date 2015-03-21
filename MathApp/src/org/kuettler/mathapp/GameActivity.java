@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ScrollView;
 import android.widget.RelativeLayout;
 
@@ -325,20 +327,24 @@ public class GameActivity extends ActionBarActivity {
         addToResults(rightAnswers + wrongAnswers + 1, exercise.getPlainQuestion(),
                      exercise.formatedSolution(), "", 0);
 
+        final View kButton = findViewById(R.id.k_button);
+        final View mButton = findViewById(R.id.m_button);
+
         slideUp.setFillAfter(true);
         slideUp.setAnimationListener(new Animation.AnimationListener() {
             @Override public void onAnimationEnd(Animation animation) {
                 mExerciseView.setVisibility(View.GONE);
                 mAnswerEditText.setVisibility(View.GONE);
                 mSendButton.setVisibility(View.GONE);
+                kButton.setVisibility(View.GONE);
+                mButton.setVisibility(View.GONE);
+
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
             @Override public void onAnimationRepeat(Animation animation) {}
             @Override public void onAnimationStart(Animation animation) {}
         });
         if (level == Exercise.Level.ESTIMATION) {
-            View kButton = findViewById(R.id.k_button);
-            View mButton = findViewById(R.id.m_button);
             kButton.startAnimation(slideUp);
             mButton.startAnimation(slideUp);
         }
@@ -373,6 +379,21 @@ public class GameActivity extends ActionBarActivity {
                                  findViewById(R.id.seconds_per_answer_text)}) {
             v.startAnimation(animFadeIn);
         }
+
+        Stat.Game game = new Stat.Game.Builder(level, mode).rightAnswers(rightAnswers)
+            .wrongAnswers(wrongAnswers).secondsPerAnswer(secondsPerAnswer).build();
+        int previousRecord = Stat.getInstance().addGame(game);
+
+        if (previousRecord > 0 && game.points() > previousRecord) {
+            Toast toast =
+                Toast.makeText(getApplicationContext(),
+                               String.format("%d points! New record from previous %d.",
+                                             game.points(), previousRecord),
+                               Toast.LENGTH_LONG);
+            toast.show();
+        }
+
+        Stat.getInstance().save(getApplicationContext());
     }
 
     public void restart(View view) {
