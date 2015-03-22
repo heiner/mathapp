@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -43,6 +44,19 @@ class StatsView extends View {
     private Stats.GameList currentGameList = stats.getGameList(level, mode);
 
     private Stats.Game taggedGame;
+
+    private final Path zigzag;
+    {
+        zigzag = new Path();
+        //float height = 2*blockOffset + blockHeight;
+        float height = blockHeight;
+        //height *= 2;
+        zigzag.rLineTo(0, height/8);
+        zigzag.rLineTo(- barWidth/2 - axisOffset, height/8);
+        zigzag.rLineTo(barWidth + 2*axisOffset, height/2);
+        zigzag.rLineTo(- barWidth/2 - axisOffset, height/8);
+        zigzag.rLineTo(0, height/8);
+    }
 
     public StatsView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -96,6 +110,7 @@ class StatsView extends View {
 
         p.setStrokeWidth(4);
         canvas.drawLine(borderDistance, atAxis(), getWidth() - borderDistance, atAxis(), p);
+        p.setStrokeWidth(3);
 
         float x = getWidth() - borderDistance;
 
@@ -130,6 +145,37 @@ class StatsView extends View {
             {
                 scale = Math.min((float) points/pointsPerBlock, 1.0f);
                 canvas.drawRect(x, y, x + barWidth, y + scale*blockHeight, p);
+
+                if (y + (float) points/pointsPerBlock * (blockHeight + blockOffset)
+                    > getHeight() - 3*p.getFontSpacing()) {
+                    // someone was ridiculous
+                    y += blockHeight;
+
+                    int missing = (pointsPerBlock - points) % pointsPerBlock;
+                    float skipped = blockHeight*missing/pointsPerBlock + blockHeight;
+
+                    p.setStyle(Paint.Style.STROKE);
+
+                    Path z = new Path(zigzag);
+                    Matrix M = new Matrix();
+                    if (missing == 0) {
+                        M.setScale(1, skipped/blockHeight, 0, 0);
+                    } else {
+                        M.setScale(1, 1 + skipped/blockHeight, 0, 0);
+                    }
+                    z.transform(M);
+                    z.offset(x + barWidth/2, y);
+                    canvas.drawPath(z, p);
+                    p.setStyle(Paint.Style.FILL);
+
+                    y += skipped - blockOffset;
+
+                    points = points % pointsPerBlock + pointsPerBlock;
+                    if (points == pointsPerBlock) {
+                        y -= blockHeight;
+                        points *= 2;
+                    }
+                }
             }
             if (g.wrongAnswers() > 0) {
                 y += textSize;
