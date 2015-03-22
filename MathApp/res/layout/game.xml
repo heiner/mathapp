@@ -29,7 +29,7 @@
       android:layout_toLeftOf="@+id/timer_textview"
       android:textSize="@dimen/extraTimer_fontSize"
       android:text="+ 2 sec "
-      android:textColor="@color/acceptGreen"
+      android:textColor="@color/good_green"
       android:visibility="invisible"
       />
 
@@ -107,7 +107,7 @@
       android:layout_alignTop="@id/send_button"
       android:src="@drawable/ic_action_accept"
       android:visibility="invisible"
-      android:tint="@color/acceptGreen"
+      android:tint="@color/good_green"
       />
   <ImageView
       android:id="@+id/reject_image"
@@ -117,7 +117,7 @@
       android:layout_alignTop="@id/send_button"
       android:src="@drawable/ic_action_cancel"
       android:visibility="invisible"
-      android:tint="@color/redTimer"
+      android:tint="@color/bad_red"
       />
 
   <Button

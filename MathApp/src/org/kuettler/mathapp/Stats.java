@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-class Stat {
+class Stats {
     public static final String FILENAME = "stat.json";
 
     public static class GameList {
@@ -174,10 +174,10 @@ class Stat {
         }
     }
 
-    private static final Stat INSTANCE = new Stat();
+    private static final Stats INSTANCE = new Stats();
     private Map<Exercise.Level, Map<MathActivity.Mode, GameList>> data;
 
-    private Stat() {
+    private Stats() {
         data = new HashMap<Exercise.Level, Map<MathActivity.Mode, GameList>>();
         for (Exercise.Level level : Exercise.Level.values()) {
             data.put(level, new HashMap<MathActivity.Mode, GameList>());
@@ -187,7 +187,7 @@ class Stat {
         }
     }
 
-    public static Stat getInstance() {
+    public static Stats getInstance() {
         return INSTANCE;
     }
 
@@ -227,7 +227,7 @@ class Stat {
     public boolean load(android.content.Context context) {
         InputStream stream;
         try {
-            stream = context.openFileInput(Stat.FILENAME);
+            stream = context.openFileInput(Stats.FILENAME);
 
             int count;
             byte[] buffer = new byte[1024];
@@ -242,6 +242,7 @@ class Stat {
                 byteStream.write(buffer, 0, count);
             }
 
+            Log.d(MathActivity.TAG, byteStream.toString());
             return loadJSONObject(new JSONObject(byteStream.toString()));
         } catch (Exception e) {
             Log.d(MathActivity.TAG, e.toString());
@@ -265,7 +266,7 @@ class Stat {
     public boolean save(android.content.Context context) {
         OutputStream stream;
         try {
-            stream = context.openFileOutput(Stat.FILENAME,
+            stream = context.openFileOutput(Stats.FILENAME,
                                             android.content.Context.MODE_PRIVATE);
             stream.write(toJSONObject().toString().getBytes());
             stream.close();

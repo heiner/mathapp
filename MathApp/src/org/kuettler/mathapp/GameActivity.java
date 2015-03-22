@@ -139,7 +139,7 @@ public class GameActivity extends ActionBarActivity {
                                                  msecondsLeft / 1000 / 60,
                                                  msecUntilFinished));
                 if (msecondsLeft / 1000 <= 10) {
-                    mTimerView.setTextColor(getResources().getColor(R.color.redTimer));
+                    mTimerView.setTextColor(getResources().getColor(R.color.bad_red));
                 }
             }
 
@@ -204,7 +204,7 @@ public class GameActivity extends ActionBarActivity {
         addToResults(rightAnswers + wrongAnswers, exercise.getPlainQuestion(),
                      exercise.formatedSolution(), answer,
                      exercise.givenAnswerCorrect() ?
-                     R.color.acceptGreen : R.color.redTimer);
+                     R.color.good_green : R.color.bad_red);
 
         updateRightWrongPoints();
         newExercise();
@@ -380,9 +380,9 @@ public class GameActivity extends ActionBarActivity {
             v.startAnimation(animFadeIn);
         }
 
-        Stat.Game game = new Stat.Game.Builder(level, mode).rightAnswers(rightAnswers)
+        Stats.Game game = new Stats.Game.Builder(level, mode).rightAnswers(rightAnswers)
             .wrongAnswers(wrongAnswers).secondsPerAnswer(secondsPerAnswer).build();
-        int previousRecord = Stat.getInstance().addGame(game);
+        int previousRecord = Stats.getInstance().addGame(game);
 
         if (previousRecord > 0 && game.points() > previousRecord) {
             Toast toast =
@@ -393,7 +393,7 @@ public class GameActivity extends ActionBarActivity {
             toast.show();
         }
 
-        Stat.getInstance().save(getApplicationContext());
+        Stats.getInstance().save(getApplicationContext());
     }
 
     public void restart(View view) {
