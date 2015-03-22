@@ -17,6 +17,10 @@ class Exercise {
         public String toString() {
             return name().toLowerCase();
         }
+
+        public static Level getDefault() {
+            return EASY;
+        }
     }
 
     public enum Operation {

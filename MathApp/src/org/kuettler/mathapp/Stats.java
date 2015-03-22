@@ -1,6 +1,7 @@
 package org.kuettler.mathapp;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
@@ -20,9 +21,8 @@ class Stats {
     public static final String FILENAME = "stat.json";
 
     public static class GameList {
-        private List<Game> games;
+        private LinkedList<Game> games;
         private Game best;
-        private Game last;
 
         GameList() {
             games = new LinkedList<Game>();
@@ -32,8 +32,29 @@ class Stats {
             if (best == null || best.points() < game.points()) {
                 best = game;
             }
-            last = game;
             games.add(game);
+        }
+
+        public boolean isEmpty() {
+            return games.isEmpty();
+        }
+        public int size() {
+            return games.size();
+        }
+        public Game getLast() {
+            return games.getLast();
+        }
+
+        public Iterable<Game> asDescendingIterable() {
+            return new Iterable<Game>() {
+                public Iterator<Game> iterator() {
+                    return games.descendingIterator();
+                }
+            };
+        }
+
+        public Game getBestGame() {
+            return best;
         }
 
         public boolean isBest(Game game) {
@@ -41,7 +62,7 @@ class Stats {
         }
 
         public boolean isLastBest() {
-            return isBest(last);
+            return isBest(getLast());
         }
 
         public int pointRecord() {
@@ -172,6 +193,16 @@ class Stats {
                 .secondsPerAnswer((float) gameJSON.getDouble(SECONDS_PER_ANSWER))
                 .date(gameJSON.getLong(DATE)).build();
         }
+
+        @Override
+        public String toString() {
+            try {
+                return toJSONObject().toString(2);
+            } catch (JSONException e) {
+                Log.d(MathActivity.TAG, e.toString());
+                return null;
+            }
+        }
     }
 
     private static final Stats INSTANCE = new Stats();
@@ -203,8 +234,12 @@ class Stats {
         return getGameList(game).isBest(game);
     }
 
+    GameList getGameList(Exercise.Level level, MathActivity.Mode mode) {
+        return data.get(level).get(mode);
+    }
+
     protected GameList getGameList(Game game) {
-        return data.get(game.level()).get(game.mode());
+        return getGameList(game.level(), game.mode());
     }
 
     public boolean loadJSONObject(JSONObject statJSON) {

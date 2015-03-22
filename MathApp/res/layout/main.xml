@@ -139,4 +139,13 @@
       android:background="@android:color/transparent"
       android:textStyle="bold"
       />
+
+  <org.kuettler.mathapp.StatsView
+      android:id="@+id/statsview"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:layout_centerHorizontal="true"
+      android:layout_below="@id/button_start_game"
+      />
+
 </RelativeLayout>

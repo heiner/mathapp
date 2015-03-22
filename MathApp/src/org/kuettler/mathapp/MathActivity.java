@@ -26,8 +26,8 @@ public class MathActivity extends ActionBarActivity
 
     private Intent intent;
 
-    private Exercise.Level level = Exercise.Level.EASY;
-    private Mode mode = Mode.RANDOM;
+    private Exercise.Level level = Exercise.Level.getDefault();
+    private Mode mode = Mode.getDefault();
 
     public enum Mode {
         PLUS(R.id.radio_plus, "addition"),
@@ -44,6 +44,10 @@ public class MathActivity extends ActionBarActivity
 
         public final static String TAG =
             Mode.class.getCanonicalName();
+
+        public static Mode getDefault() {
+            return RANDOM;
+        }
 
         private final int radioId;
         private final String modeName;
@@ -100,7 +104,7 @@ public class MathActivity extends ActionBarActivity
         animFadeOut.setDuration(100);
         animFadeIn.setDuration(700);
 
-        setButtonText();
+        updateLevelAndMode();
 
         Stats.getInstance().load(getApplicationContext());
         try {
@@ -134,12 +138,12 @@ public class MathActivity extends ActionBarActivity
     }
     public void setLevel(View view) {
         level = idsToLevels.get(view.getId());
-        setButtonText();
+        updateLevelAndMode();
     }
 
     public void setMode(View view) {
         mode = Mode.fromRadioId(view.getId());
-        setButtonText();
+        updateLevelAndMode();
     }
 
     public void startGame(View view) {
@@ -149,7 +153,7 @@ public class MathActivity extends ActionBarActivity
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    private void setButtonText() {
+    private void updateLevelAndMode() {
         TextView button = (TextView) findViewById(R.id.button_start_game);
         String text = "Start new " + level.toString() + " " +
             mode.toString() + " game";
@@ -159,6 +163,10 @@ public class MathActivity extends ActionBarActivity
             button.setText(text);
             button.startAnimation(animFadeIn);
         }
+
+        StatsView statsView = (StatsView) findViewById(R.id.statsview);
+        statsView.setLevel(level);
+        statsView.setMode(mode);
     }
 
     @Override

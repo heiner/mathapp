@@ -16,4 +16,5 @@
   <dimen name="vertical_distance_answer_stats">25dp</dimen>
   <dimen name="margin_wrong_stat_distance">140dp</dimen>
   <dimen name="vertical_distance_results">10dp</dimen>
+  <dimen name="statsview_margin">20dp</dimen>
 </resources>

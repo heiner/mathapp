@@ -2,8 +2,6 @@ package org.kuettler.mathapp;
 
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.HashMap;
 
 import android.app.Fragment;
 import android.content.Context;
