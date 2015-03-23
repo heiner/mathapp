@@ -14,16 +14,16 @@
       </intent-filter>
     </activity>
     <activity
-        android:name="org.kuettler.mathapp.DisplayMessageActivity"
-        android:label="@string/title_activity_display_message"
+        android:name="org.kuettler.mathapp.GameActivity"
+        android:label="@string/title_game_activity"
         android:parentActivityName="org.kuettler.mathapp.MathActivity" >
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value="org.kuettler.mathapp.MathActivity" />
     </activity>
     <activity
-        android:name="org.kuettler.mathapp.GameActivity"
-        android:label="@string/title_game_activity"
+        android:name="org.kuettler.mathapp.AboutActivity"
+        android:label="@string/title_about_activity"
         android:parentActivityName="org.kuettler.mathapp.MathActivity" >
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"

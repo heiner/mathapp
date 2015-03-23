@@ -179,10 +179,11 @@ public class MathActivity extends ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle presses on the action bar items
+        // Handle presses on the action bar items
         switch (item.getItemId()) {
         case R.id.action_about:
-            //openSearch();
+            Intent aboutIntent = new Intent(this, AboutActivity.class);
+            startActivity(aboutIntent);
             return true;
         default:
             return super.onOptionsItemSelected(item);

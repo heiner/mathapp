@@ -2,8 +2,8 @@
 <resources>
   <string name="app_name">Mental Math</string>
   <string name="button_start_game">Start new game</string>
-  <string name="title_activity_display_message">Heiner\'s Message</string>
   <string name="title_game_activity">Game</string>
+  <string name="title_about_activity">About</string>
   <string name="action_search">Search</string>
   <string name="action_about">About</string>
   <string name="answer">\?</string>
