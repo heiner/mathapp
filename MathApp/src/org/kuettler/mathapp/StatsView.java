@@ -7,7 +7,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -33,8 +33,8 @@ class StatsView extends View {
     private float blockOffset = 4;
     private float barWidth = 40;
     private float blockHeight = 40;
-    private float barOffset = 30;
-    private int pointsPerBlock = 5;
+    private float barDistance = 30;
+    private int unitsPerBlock = 5;
     private float borderDistance;
     private int textSize = 40;
 
@@ -115,89 +115,77 @@ class StatsView extends View {
         float x = getWidth() - borderDistance;
 
         xToBar.clear();
-        for (Stats.Game g : currentGameList.asDescendingIterable()) {
-            x -= barWidth + barOffset;
+        for (Stats.Game game : currentGameList.asDescendingIterable()) {
+            x -= barWidth + barDistance;
             if (x < 0)
                 break;
 
-            xToBar.put(x, g);
+            xToBar.put(x, game);
 
-            int points;
             float y;
-            float scale = 1f;
 
-            p.setColor(g.wrongAnswers() == 0 ? green : gray);
-            for (points = g.points(), y = aboveAxis();
-                 points > 0;
-                 y -= blockOffset + scale*blockHeight, points -= pointsPerBlock)
-            {
-                scale = Math.min((float) points/pointsPerBlock, 1.0f);
-                canvas.drawRect(x, y - scale*blockHeight, x + barWidth, y, p);
-            }
-            p.setColor(g.wrongAnswers() == 0 && g.rightAnswers() > 0 ? green : gray);
-            drawTextMiddle(Integer.toString(g.rightAnswers()),
+            p.setColor(game.wrongAnswers() == 0 && game.rightAnswers() > 0 ? green : gray);
+            y = drawBar(game.rightAnswers(), x, canvas, p);
+            drawTextMiddle(Integer.toString(game.rightAnswers()),
                            canvas, x + barWidth/2, y - axisOffset, p);
 
             p.setColor(red);
-            for (points = g.wrongAnswers(), y = belowAxis();
-                 points > 0;
-                 y += blockOffset + scale*blockHeight, points -= pointsPerBlock)
-            {
-                scale = Math.min((float) points/pointsPerBlock, 1.0f);
-                canvas.drawRect(x, y, x + barWidth, y + scale*blockHeight, p);
-
-                if (y + (float) points/pointsPerBlock * (blockHeight + blockOffset)
-                    > getHeight() - 3*p.getFontSpacing()) {
-                    // someone was ridiculous
-                    y += blockHeight;
-
-                    int missing = (pointsPerBlock - points) % pointsPerBlock;
-                    float skipped = blockHeight*missing/pointsPerBlock + blockHeight;
-
-                    p.setStyle(Paint.Style.STROKE);
-
-                    Path z = new Path(zigzag);
-                    Matrix M = new Matrix();
-                    if (missing == 0) {
-                        M.setScale(1, skipped/blockHeight, 0, 0);
-                    } else {
-                        M.setScale(1, 1 + skipped/blockHeight, 0, 0);
-                    }
-                    z.transform(M);
-                    z.offset(x + barWidth/2, y);
-                    canvas.drawPath(z, p);
-                    p.setStyle(Paint.Style.FILL);
-
-                    y += skipped - blockOffset;
-
-                    points = points % pointsPerBlock + pointsPerBlock;
-                    if (points == pointsPerBlock) {
-                        y -= blockHeight;
-                        points *= 2;
-                    }
-                }
-            }
-            if (g.wrongAnswers() > 0) {
-                y += textSize;
-                drawTextMiddle(Integer.toString(g.wrongAnswers()),
+            y = drawBar(-game.wrongAnswers(), x, canvas, p);
+            if (game.wrongAnswers() > 0) {
+                y += textSize - axisOffset; // hand-fiddeling of distances
+                drawTextMiddle(Integer.toString(game.wrongAnswers()),
                                canvas, x + barWidth/2, y, p);
                 y += p.descent();
+            } else {
+                y = belowAxis();
             }
 
-            if (g == taggedGame) {
+                // if (y + (float) points/unitsPerBlock * (blockHeight + blockOffset)
+                //     > getHeight() - 3*p.getFontSpacing()) {
+                //     // someone was ridiculous
+                //     y += blockHeight;
+
+                //     int missing = (unitsPerBlock - points) % unitsPerBlock;
+                //     float skipped = blockHeight*missing/unitsPerBlock + blockHeight;
+
+                //     p.setStyle(Paint.Style.STROKE);
+
+                //     Path z = new Path(zigzag);
+                //     Matrix M = new Matrix();
+                //     if (missing == 0) {
+                //         M.setScale(1, skipped/blockHeight, 0, 0);
+                //     } else {
+                //         M.setScale(1, 1 + skipped/blockHeight, 0, 0);
+                //     }
+                //     z.transform(M);
+                //     z.offset(x + barWidth/2, y);
+                //     canvas.drawPath(z, p);
+                //     p.setStyle(Paint.Style.FILL);
+
+                //     y += skipped - blockOffset;
+
+                //     points = points % unitsPerBlock + unitsPerBlock;
+                //     if (points == unitsPerBlock) {
+                //         y -= blockHeight;
+                //         points *= 2;
+                //     }
+                // }
+            //}
+
+            if (game == taggedGame) {
                 p.setColor(gray);
                 p.setStrokeWidth(0);
                 canvas.drawLine(x + barWidth/2, y + axisOffset,
                                 x + barWidth/2, getHeight() - 80, p);
-                String info = String.format("Points: %d", g.points());
+                String info = String.format("Points: %d", game.points());
 
-                if (g == best && best.points() > 0) {
+                if (game == best && best.points() > 0) {
                     info += ", current record!";
                     //p.setTypeface(Typeface.DEFAULT_BOLD);
                     p.setColor(green);
                 }
                 drawTextMiddle(info, canvas, x + barWidth/2, getHeight() - textSize, p);
-                info = String.format("%.1f sec/answer", g.secondsPerAnswer());
+                info = String.format("%.1f sec/answer", game.secondsPerAnswer());
                 drawTextMiddle(info, canvas, x + barWidth/2, getHeight() , p);
             }
         }
@@ -211,7 +199,7 @@ class StatsView extends View {
         p.setStrokeWidth(1);
 
         bestGameLineY = aboveAxis()
-            - (blockOffset + blockHeight) * (float) best.points() / pointsPerBlock;
+            - (blockOffset + blockHeight) * (float) best.points() / unitsPerBlock;
 
         Path path = new Path();
         path.moveTo(borderDistance/2, bestGameLineY);
@@ -228,6 +216,45 @@ class StatsView extends View {
         } else {
             canvas.drawText(text, getWidth() - length, y, p);
         }
+    }
+
+    protected float drawBar(int units, float x, Canvas canvas, Paint p) {
+        // If units >= 0, draw bar upwards; otherwise, downwards.
+        // Return topmost or bottommost y-value plus blockOffset, respectively
+        if (units == 0) {
+            return aboveAxis();
+        }
+
+        float offset = blockHeight + blockOffset;
+        if (units > 0)
+            offset = -offset;
+
+        RectF rect =
+            new RectF(x,
+                      units > 0 ? aboveAxis() - blockHeight : belowAxis(),
+                      x + barWidth,
+                      units > 0 ? aboveAxis() : belowAxis() + blockHeight);
+
+        for (int i = Math.abs(units)/unitsPerBlock; i > 0; --i) {
+            canvas.drawRect(rect, p);
+            rect.offset(0, offset);
+        }
+
+        float y = units > 0 ? rect.bottom : rect.top;
+
+        units %= unitsPerBlock;
+        if (units != 0) {
+            y -= units * blockHeight / unitsPerBlock;
+
+            canvas.drawRect(x,
+                            units > 0 ? y : rect.top,
+                            x + barWidth,
+                            units > 0 ? rect.bottom : y,
+                            p);
+            y -= units > 0 ? blockOffset : -blockOffset;
+        }
+
+        return y;
     }
 
     @Override
