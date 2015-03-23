@@ -48,7 +48,7 @@ class StatsView extends View {
     private Stats.Game taggedGame;
 
     private final Path zigzag;
-    private final float zigzagHeight = 66;
+    private final float zigzagHeight = 44;
     {
         zigzag = new Path();
         zigzag.rLineTo(0, zigzagHeight/16);
@@ -138,7 +138,9 @@ class StatsView extends View {
                 p.setStrokeWidth(0);
                 canvas.drawLine(x + barWidth/2, y + axisOffset,
                                 x + barWidth/2, getHeight() - 80, p);
-                String info = String.format("%d points", game.points());
+                String info = String.format("%d point", game.points());
+                if (game.points() != 1)
+                    info += "s";
 
                 p.setColor(gray);
 
@@ -174,10 +176,12 @@ class StatsView extends View {
     protected void drawTextMiddle(String text, Canvas canvas,
                                   float x, float y, Paint p) {
         float length = p.measureText(text);
-        if (x + length/2 <= getWidth()) {
-            canvas.drawText(text, x - length/2, y, p);
-        } else {
+        if (x + length/2 > getWidth()) {
             canvas.drawText(text, getWidth() - length, y, p);
+        } else if (x - length/2 < 0) {
+            canvas.drawText(text, 0, y, p);
+        } else {
+            canvas.drawText(text, x - length/2, y, p);
         }
     }
 
@@ -194,17 +198,21 @@ class StatsView extends View {
 
         // see if we have enough space for the full bar
         float necessarySpace =
-            units > 0 ? aboveAxis() : getHeight() - belowAxis() - 2.8f*p.getFontSpacing();
+            units > 0 ? aboveAxis() : getHeight() - belowAxis() - 3f*p.getFontSpacing();
         boolean fractionalBlock = units % unitsPerBlock != 0;
         float availableSpace = necessarySpace + (units / unitsPerBlock) * offset;
         if (fractionalBlock)
-            availableSpace -= Math.abs(units % unitsPerBlock) * blockHeight + blockOffset;
+            availableSpace -=
+                Math.abs(units % unitsPerBlock) * blockHeight / unitsPerBlock + blockOffset;
 
         RectF rect =
             new RectF(x,
                       units > 0 ? aboveAxis() - blockHeight : belowAxis(),
                       x + barWidth,
                       units > 0 ? aboveAxis() : belowAxis() + blockHeight);
+
+        //Log.d(MathActivity.TAG, String.format("StatsView.drawBar: units=%d, availableSpace=%f",
+        //                                      units, availableSpace));
 
         if (availableSpace < 0 && units < 0) {
             // let great numbers of right answers go through the roof for now.
@@ -215,7 +223,7 @@ class StatsView extends View {
             z.offset(x + barWidth/2, rect.bottom);
             if (units > 0)
                 z.offset(0, -zigzagHeight - blockHeight);
-            p.setStrokeWidth(3);
+            p.setStrokeWidth(4);
             p.setStyle(Paint.Style.STROKE);
             canvas.drawPath(z, p);
             p.setStyle(Paint.Style.FILL);
