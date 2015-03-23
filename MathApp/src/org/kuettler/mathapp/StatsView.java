@@ -32,7 +32,7 @@ class StatsView extends View {
     private float axisOffset = 6;
     private float blockOffset = 4;
     private float barWidth = 40;
-    private float blockHeight = 40;
+    private float blockHeight = 60;
     private float barDistance = 30;
     private int unitsPerBlock = 5;
     private float borderDistance;
@@ -46,16 +46,16 @@ class StatsView extends View {
     private Stats.Game taggedGame;
 
     private final Path zigzag;
+    private final float zigzagHeight = 66;
     {
         zigzag = new Path();
-        //float height = 2*blockOffset + blockHeight;
-        float height = blockHeight;
-        //height *= 2;
-        zigzag.rLineTo(0, height/8);
-        zigzag.rLineTo(- barWidth/2 - axisOffset, height/8);
-        zigzag.rLineTo(barWidth + 2*axisOffset, height/2);
-        zigzag.rLineTo(- barWidth/2 - axisOffset, height/8);
-        zigzag.rLineTo(0, height/8);
+        zigzag.rLineTo(0, zigzagHeight/16);
+        zigzag.rLineTo(- barWidth/2 - axisOffset, zigzagHeight/16);
+        zigzag.rLineTo(barWidth + 2*axisOffset, zigzagHeight/4);
+        zigzag.rLineTo(- barWidth - 2*axisOffset, zigzagHeight/4);
+        zigzag.rLineTo(barWidth + 2*axisOffset, zigzagHeight/4);
+        zigzag.rLineTo(- barWidth/2 - axisOffset, zigzagHeight/16);
+        zigzag.rLineTo(0, zigzagHeight/16);
     }
 
     public StatsView(Context context, AttributeSet attrs) {
@@ -110,7 +110,6 @@ class StatsView extends View {
 
         p.setStrokeWidth(4);
         canvas.drawLine(borderDistance, atAxis(), getWidth() - borderDistance, atAxis(), p);
-        p.setStrokeWidth(3);
 
         float x = getWidth() - borderDistance;
 
@@ -140,44 +139,12 @@ class StatsView extends View {
                 y = belowAxis();
             }
 
-                // if (y + (float) points/unitsPerBlock * (blockHeight + blockOffset)
-                //     > getHeight() - 3*p.getFontSpacing()) {
-                //     // someone was ridiculous
-                //     y += blockHeight;
-
-                //     int missing = (unitsPerBlock - points) % unitsPerBlock;
-                //     float skipped = blockHeight*missing/unitsPerBlock + blockHeight;
-
-                //     p.setStyle(Paint.Style.STROKE);
-
-                //     Path z = new Path(zigzag);
-                //     Matrix M = new Matrix();
-                //     if (missing == 0) {
-                //         M.setScale(1, skipped/blockHeight, 0, 0);
-                //     } else {
-                //         M.setScale(1, 1 + skipped/blockHeight, 0, 0);
-                //     }
-                //     z.transform(M);
-                //     z.offset(x + barWidth/2, y);
-                //     canvas.drawPath(z, p);
-                //     p.setStyle(Paint.Style.FILL);
-
-                //     y += skipped - blockOffset;
-
-                //     points = points % unitsPerBlock + unitsPerBlock;
-                //     if (points == unitsPerBlock) {
-                //         y -= blockHeight;
-                //         points *= 2;
-                //     }
-                // }
-            //}
-
             if (game == taggedGame) {
                 p.setColor(gray);
                 p.setStrokeWidth(0);
                 canvas.drawLine(x + barWidth/2, y + axisOffset,
                                 x + barWidth/2, getHeight() - 80, p);
-                String info = String.format("Points: %d", game.points());
+                String info = String.format("%d points", game.points());
 
                 if (game == best && best.points() > 0) {
                     info += ", current record!";
@@ -185,7 +152,7 @@ class StatsView extends View {
                     p.setColor(green);
                 }
                 drawTextMiddle(info, canvas, x + barWidth/2, getHeight() - textSize, p);
-                info = String.format("%.1f sec/answer", game.secondsPerAnswer());
+                info = String.format("%.1f sec⁄answer", game.secondsPerAnswer());
                 drawTextMiddle(info, canvas, x + barWidth/2, getHeight() , p);
             }
         }
@@ -229,11 +196,44 @@ class StatsView extends View {
         if (units > 0)
             offset = -offset;
 
+        // see if we have enough space for the full bar
+        float necessarySpace =
+            units > 0 ? aboveAxis() : getHeight() - belowAxis() - 2.8f*p.getFontSpacing();
+        boolean fractionalBlock = units % unitsPerBlock != 0;
+        float availableSpace = necessarySpace + (units / unitsPerBlock) * offset;
+        if (fractionalBlock)
+            availableSpace -= Math.abs(units % unitsPerBlock) * blockHeight + blockOffset;
+
         RectF rect =
             new RectF(x,
                       units > 0 ? aboveAxis() - blockHeight : belowAxis(),
                       x + barWidth,
                       units > 0 ? aboveAxis() : belowAxis() + blockHeight);
+
+        if (availableSpace < 0 && units < 0) {
+            // let great numbers of right answers go through the roof for now.
+            // our players deserve it.
+            canvas.drawRect(rect, p);
+
+            Path z = new Path(zigzag);
+            z.offset(x + barWidth/2, rect.bottom);
+            if (units > 0)
+                z.offset(0, -zigzagHeight - blockHeight);
+            p.setStrokeWidth(3);
+            p.setStyle(Paint.Style.STROKE);
+            canvas.drawPath(z, p);
+            p.setStyle(Paint.Style.FILL);
+
+            if (units < 0) { // many wrong answers: more "usual" case
+                rect.offset(0, zigzagHeight + blockHeight);
+                canvas.drawRect(rect, p);
+                return rect.bottom + blockOffset;
+            } else {
+                rect.offset(0, -zigzagHeight - blockHeight);
+                canvas.drawRect(rect, p);
+                return rect.top - blockOffset;
+            }
+        }
 
         for (int i = Math.abs(units)/unitsPerBlock; i > 0; --i) {
             canvas.drawRect(rect, p);
@@ -242,9 +242,8 @@ class StatsView extends View {
 
         float y = units > 0 ? rect.bottom : rect.top;
 
-        units %= unitsPerBlock;
-        if (units != 0) {
-            y -= units * blockHeight / unitsPerBlock;
+        if (fractionalBlock) {
+            y -= (units % unitsPerBlock) * blockHeight / unitsPerBlock;
 
             canvas.drawRect(x,
                             units > 0 ? y : rect.top,
@@ -259,12 +258,7 @@ class StatsView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Float x = xToBar.lowerKey(event.getX());
-        if (x == null) {
-            taggedGame = null;
-            invalidate();
-            return super.onTouchEvent(event);
-        } else if (event.getY() < bestGameLineY + blockHeight) {
+         if (event.getY() < bestGameLineY + blockHeight) {
             if (event.getY() > bestGameLineY - blockHeight) {
                 taggedGame = currentGameList.getBestGame();
             } else {
@@ -272,6 +266,13 @@ class StatsView extends View {
             }
             invalidate();
             return true;
+        }
+
+        Float x = xToBar.lowerKey(event.getX());
+        if (x == null) {
+            taggedGame = null;
+            invalidate();
+            return super.onTouchEvent(event);
         }
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
