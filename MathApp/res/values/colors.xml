@@ -8,4 +8,5 @@
   <color name="good_green">#00aa00</color>
   <color name="bad_red">#bb3333</color>
   <color name="neutral_gray">#737373</color>
+  <color name="active_teal">#009688</color>
 </resources>

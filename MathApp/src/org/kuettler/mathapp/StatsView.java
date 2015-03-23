@@ -19,10 +19,11 @@ import android.view.View;
 
 
 class StatsView extends View {
-    private final int green;
-    private final int red;
-    private final int gray;
-    private final int black;
+    private final int green = getResources().getColor(R.color.good_green);
+    private final int red = getResources().getColor(R.color.bad_red);
+    private final int gray = getResources().getColor(R.color.neutral_gray);
+    private final int black = getResources().getColor(android.R.color.black);
+    private final int teal = getResources().getColor(R.color.active_teal);
 
     private final Stats stats = Stats.getInstance();
 
@@ -35,7 +36,8 @@ class StatsView extends View {
     private float blockHeight = 60;
     private float barDistance = 30;
     private int unitsPerBlock = 5;
-    private float borderDistance;
+    private final float borderDistance
+        = getResources().getDimension(R.dimen.statsview_margin);
     private int textSize = 40;
 
     private float bestGameLineY = 0;
@@ -60,14 +62,6 @@ class StatsView extends View {
 
     public StatsView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        green = getResources().getColor(R.color.good_green);
-        red = getResources().getColor(R.color.bad_red);
-        gray = getResources().getColor(R.color.neutral_gray);
-        black = getResources().getColor(android.R.color.black);
-
-        borderDistance = getResources().getDimension(R.dimen.statsview_margin);
-
         xToBar = new TreeMap<Float, Stats.Game>();
     }
 
@@ -140,11 +134,13 @@ class StatsView extends View {
             }
 
             if (game == taggedGame) {
-                p.setColor(gray);
+                p.setColor(teal);
                 p.setStrokeWidth(0);
                 canvas.drawLine(x + barWidth/2, y + axisOffset,
                                 x + barWidth/2, getHeight() - 80, p);
                 String info = String.format("%d points", game.points());
+
+                p.setColor(gray);
 
                 if (game == best && best.points() > 0) {
                     info += ", current record!";

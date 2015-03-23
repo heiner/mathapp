@@ -279,7 +279,13 @@ class Stats {
 
             Log.d(MathActivity.TAG, byteStream.toString());
             return loadJSONObject(new JSONObject(byteStream.toString()));
-        } catch (Exception e) {
+        } catch (java.io.FileNotFoundException e) {
+            Log.d(MathActivity.TAG,
+                  String.format("Stats file %s not found. Will be created.",
+                                Stats.FILENAME));
+            return false;
+        }
+        catch (Exception e) {
             Log.d(MathActivity.TAG, e.toString());
             return false;
         }
