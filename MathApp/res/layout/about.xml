@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,17 +8,85 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/about_background"
+    android:orientation="vertical"
     >
 
-    <TextView
-      android:id="@+id/about_textview"
+  <ImageView
+      android:id="@+id/about_icon"
+      android:layout_width="@dimen/about_icon_size"
+      android:layout_height="@dimen/about_icon_size"
+      android:layout_marginTop="120dp"
+      android:layout_alignParentTop="true"
+      android:layout_centerHorizontal="true"
+      android:src="@drawable/ic_percent"
+      />
+
+  <TextView
+      android:id="@+id/about_appname_textview"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_below="@id/about_icon"
       android:layout_centerHorizontal="true"
-      android:text="About!"
+      android:text="@string/app_name"
       android:textSize="14sp"
       android:textAllCaps="true"
       android:textStyle="bold"
+      android:textColor="@color/textColor"
+      android:gravity="center"
+      />
+
+  <TextView
+      android:id="@+id/about_by_textview"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/about_appname_textview"
+      android:layout_centerHorizontal="true"
+      android:text="by"
+      android:textSize="10sp"
+      android:textColor="@color/textColor"
+      android:gravity="center"
+      />
+
+  <TextView
+      android:id="@+id/about_appauthor_textview"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/about_by_textview"
+      android:layout_centerHorizontal="true"
+      android:text="@string/app_author"
+      android:textSize="14sp"
+      android:textAllCaps="true"
+      android:textStyle="bold"
+      android:textColor="@color/textColor"
+      android:gravity="center"
+      />
+
+  <TextView
+      android:id="@+id/about_bitcoin_address_textview"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/about_appauthor_textview"
+      android:layout_centerHorizontal="true"
+      android:text="@string/bitcoin_address"
+      android:textSize="12sp"
+      android:textColor="@color/textColor"
+      android:gravity="center"
+      android:clickable="true"
+      android:onClick="copyBitcoinAddress"
+      />
+
+  <TextView
+      android:id="@+id/about_preplounge_hattip_textview"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/about_bitcoin_address_textview"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="10dp"
+      android:text="@string/preplounge_hattip"
+      android:textSize="12sp"
+      android:textColor="@color/black"
+      android:gravity="center"
       />
 
 </RelativeLayout>

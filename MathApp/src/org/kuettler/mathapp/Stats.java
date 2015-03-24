@@ -276,8 +276,6 @@ class Stats {
                     break;
                 byteStream.write(buffer, 0, count);
             }
-
-            Log.d(MathActivity.TAG, byteStream.toString());
             return loadJSONObject(new JSONObject(byteStream.toString()));
         } catch (java.io.FileNotFoundException e) {
             Log.d(MathActivity.TAG,
