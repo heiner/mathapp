@@ -77,12 +77,24 @@
       />
 
   <TextView
-      android:id="@+id/about_preplounge_hattip_textview"
+      android:id="@+id/about_github_link_textview"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@id/about_bitcoin_address_textview"
       android:layout_centerHorizontal="true"
+      android:text="@string/github_link"
+      android:textSize="12sp"
+      android:textColor="@color/black"
+      android:gravity="center"
+      />
+
+  <TextView
+      android:id="@+id/about_preplounge_hattip_textview"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true"
       android:layout_marginTop="10dp"
+      android:layout_below="@id/about_github_link_textview"
       android:text="@string/preplounge_hattip"
       android:textSize="12sp"
       android:textColor="@color/black"

@@ -18,6 +18,9 @@ public class AboutActivity extends Activity {
         TextView hattip
             = (TextView) findViewById(R.id.about_preplounge_hattip_textview);
         hattip.setMovementMethod(LinkMovementMethod.getInstance());
+        TextView github
+            = (TextView) findViewById(R.id.about_github_link_textview);
+        github.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     public void copyBitcoinAddress(View view) {
