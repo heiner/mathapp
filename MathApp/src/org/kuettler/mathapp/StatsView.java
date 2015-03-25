@@ -30,15 +30,25 @@ class StatsView extends View {
     private Exercise.Level level = Exercise.Level.getDefault();
     private MathActivity.Mode mode = MathActivity.Mode.getDefault();
 
-    private float axisOffset = 6;
-    private float blockOffset = 4;
-    private float barWidth = 40;
-    private float blockHeight = 60;
-    private float barDistance = 30;
-    private int unitsPerBlock = 5;
+    private int unitsPerBlock
+        = getResources().getInteger(R.integer.statsview_unitsPerBlock);
+
+    private float axisOffset
+        = getResources().getDimension(R.dimen.statsview_axisOffset);
+    private float blockOffset
+        = getResources().getDimension(R.dimen.statsview_blockOffset);
+    private float barWidth
+        = getResources().getDimension(R.dimen.statsview_barWidth);
+    private float blockHeight
+        = getResources().getDimension(R.dimen.statsview_blockHeight);
+    private float barDistance
+        = getResources().getDimension(R.dimen.statsview_barDistance);
     private final float borderDistance
         = getResources().getDimension(R.dimen.statsview_margin);
-    private int textSize = 40;
+    private int textSize
+         = getResources().getDimensionPixelSize(R.dimen.statsview_textSize);
+    private float axisWidth
+        = getResources().getDimension(R.dimen.statsview_axisWidth);
 
     private float bestGameLineY = 0;
 
@@ -48,7 +58,8 @@ class StatsView extends View {
     private Stats.Game taggedGame;
 
     private final Path zigzag;
-    private final float zigzagHeight = 44;
+    private final float zigzagHeight
+        = getResources().getDimension(R.dimen.statsview_zigzagHeight);;
     {
         zigzag = new Path();
         zigzag.rLineTo(0, zigzagHeight/16);
@@ -87,6 +98,8 @@ class StatsView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
+        Log.d(MathActivity.TAG, String.format("1dp = %f", axisWidth));
+
         Paint p = new Paint();
         p.setTextSize(textSize);
         p.setColor(gray);
@@ -96,13 +109,13 @@ class StatsView extends View {
 
         if (currentGameList.isEmpty()) {
             drawTextMiddle("(Never played before)", canvas,
-                           getWidth()/2, (getHeight() - 20)/2, p);
+                           getWidth()/2, (getHeight() - textSize/2)/2, p);
             return;
         }
 
         Stats.Game best = currentGameList.getBestGame();
 
-        p.setStrokeWidth(4);
+        p.setStrokeWidth(axisWidth);
         canvas.drawLine(borderDistance, atAxis(), getWidth() - borderDistance, atAxis(), p);
 
         float x = getWidth() - borderDistance;
@@ -137,7 +150,7 @@ class StatsView extends View {
                 p.setColor(teal);
                 p.setStrokeWidth(0);
                 canvas.drawLine(x + barWidth/2, y + axisOffset,
-                                x + barWidth/2, getHeight() - 80, p);
+                                x + barWidth/2, getHeight() - 2*textSize, p);
                 String info = String.format("%d point", game.points());
                 if (game.points() != 1)
                     info += "s";
@@ -161,7 +174,7 @@ class StatsView extends View {
         p.setColor(black);
         p.setStyle(Paint.Style.STROKE);
         p.setPathEffect(new DashPathEffect(new float[] {20,10}, 0));
-        p.setStrokeWidth(1);
+        p.setStrokeWidth(axisWidth/2);
 
         bestGameLineY = aboveAxis()
             - (blockOffset + blockHeight) * (float) best.points() / unitsPerBlock;
@@ -223,7 +236,7 @@ class StatsView extends View {
             z.offset(x + barWidth/2, rect.bottom);
             if (units > 0)
                 z.offset(0, -zigzagHeight - blockHeight);
-            p.setStrokeWidth(4);
+            p.setStrokeWidth(axisWidth);
             p.setStyle(Paint.Style.STROKE);
             canvas.drawPath(z, p);
             p.setStyle(Paint.Style.FILL);

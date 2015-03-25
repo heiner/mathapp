@@ -16,6 +16,17 @@
   <dimen name="vertical_distance_answer_stats">25dp</dimen>
   <dimen name="margin_wrong_stat_distance">140dp</dimen>
   <dimen name="vertical_distance_results">10dp</dimen>
-  <dimen name="statsview_margin">20dp</dimen>
   <dimen name="about_icon_size">120dp</dimen>
+
+  <dimen name="statsview_margin">20dp</dimen>
+  <dimen name="statsview_textSize">14sp</dimen>
+  <dimen name="statsview_axisWidth">1dp</dimen>
+  <dimen name="statsview_axisOffset">2dp</dimen>
+  <dimen name="statsview_blockOffset">1dp</dimen>
+  <dimen name="statsview_barWidth">14dp</dimen>
+  <dimen name="statsview_blockHeight">20dp</dimen>
+  <dimen name="statsview_barDistance">10dp</dimen>
+  <dimen name="statsview_zigzagHeight">14dp</dimen>
+
+  <integer name="statsview_unitsPerBlock">5</integer>
 </resources>
