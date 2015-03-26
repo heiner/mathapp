@@ -29,7 +29,7 @@ public class AboutActivity extends Activity {
         cm.setText(getResources().getString(R.string.bitcoin_address));
         Toast toast =
             Toast.makeText(getApplicationContext(),
-                           "Copied Bitcoin address to clipboard",
+                           getResources().getString(R.string.about_copied_bitcoin_address),
                            Toast.LENGTH_SHORT);
         toast.show();
     }

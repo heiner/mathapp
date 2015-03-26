@@ -5,6 +5,7 @@
   <string name="bitcoin_address">13NFvoTuDdJSLYSLMJbWzBJDtYnpYLhVj1</string>
   <string name="preplounge_hattip">Inspired by <a href="https://www.preplounge.com">preplounge.com</a>.</string>
   <string name="github_link">Code at <a href="https://github.com/heiner/mathapp">github.com/heiner/mathapp</a>.</string>
+  <string name="about_copied_bitcoin_address">Bitcoin address copied to clipboard</string>
   <string name="button_start_game">Start new game</string>
   <string name="title_game_activity">Game</string>
   <string name="title_about_activity">About</string>

@@ -1,19 +1,24 @@
 # Mental Math App for Android
 
+([Link to Google play store](https://play.google.com/store/apps/details?id=org.kuettler.mathapp))
+
 Tired of sinking time into mindless apps? Ready for a challenge? Wish
 you could work out that change before the clerk does? This app will
 solve your problems!
 
 Train your mental arithmetic on mathematical operations such as
-★ ADDITION,
-★ SUBTRACTION,
-★ MULTIPLICATION, – and, yes! –,
-★ DIVISION!
+
+* ADDITION,
+* SUBTRACTION,
+* MULTIPLICATION, – and, yes! –,
+* DIVISION!
 
 But wait, there's more! Train yourself on
-★ PERCENTAGE CALCULATION
+
+* PERCENTAGE CALCULATION
+
 as well, or at any one of those operations chosen at RANDOM! Track
-your speed and impress your friends. Or just play all day if you don't
+your speed and impress your fhriends. Or just play all day if you don't
 happen to have any friends. Let the numbers be your true friends!
 
 This app features exciting difficulty levels such as EASY, MEDIUM, and
