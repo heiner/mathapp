@@ -221,15 +221,23 @@ public class GameActivity extends ActionBarActivity {
         final RelativeLayout.LayoutParams lp_left =
             new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                             RelativeLayout.LayoutParams.WRAP_CONTENT);
+        // Duplication as a fix for bug like http://stackoverflow.com/q/21200522/
+        final RelativeLayout.LayoutParams lp_middle =
+            new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                            RelativeLayout.LayoutParams.WRAP_CONTENT);
+        final RelativeLayout.LayoutParams lp_right =
+            new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                            RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         if (entryId == 1) {
             lp_left.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            lp_middle.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            lp_right.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         } else {
             lp_left.addRule(RelativeLayout.BELOW, entryId - 1);
+            lp_middle.addRule(RelativeLayout.BELOW, entryId - 1);
+            lp_right.addRule(RelativeLayout.BELOW, entryId - 1);
         }
-
-        final RelativeLayout.LayoutParams lp_middle = new RelativeLayout.LayoutParams(lp_left);
-        final RelativeLayout.LayoutParams lp_right = new RelativeLayout.LayoutParams(lp_left);
 
         if (entryId == 1) {
             lp_left.addRule(RelativeLayout.ALIGN_LEFT, R.id.fake_question_entry);
