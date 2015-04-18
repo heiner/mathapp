@@ -98,7 +98,7 @@ class StatsView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
-        Log.d(MathActivity.TAG, String.format("1dp = %f", axisWidth));
+        // Log.d(MathActivity.TAG, String.format("1dp = %f", axisWidth));
 
         Paint p = new Paint();
         p.setTextSize(textSize);

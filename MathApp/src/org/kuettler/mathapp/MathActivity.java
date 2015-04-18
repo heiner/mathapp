@@ -113,6 +113,11 @@ public class MathActivity extends ActionBarActivity
             Log.d(TAG, e.toString());
         }
 
+        Log.d(TAG, String.format("smallestScreenWidthDp: %d",
+                                 getResources().getConfiguration().smallestScreenWidthDp));
+        //Log.d(TAG, String.format("density:: %f",
+        //getResources().getDisplayMetrics().density));
+
         // SpinnerAdapter mSpinnerAdapter =
         //     ArrayAdapter.createFromResource(this, R.array.action_list,
         //                                     android.R.layout.simple_spinner_dropdown_item);
@@ -137,6 +142,8 @@ public class MathActivity extends ActionBarActivity
         idsToLevels.put(R.id.radio_estimation, Exercise.Level.ESTIMATION);
     }
     public void setLevel(View view) {
+        // idea: unset other buttons here,
+        // and have a different layout for small screens
         level = idsToLevels.get(view.getId());
         updateLevelAndMode();
     }

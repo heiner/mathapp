@@ -1,13 +1,16 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:mathapp="http://schemas.android.com/apk/res-auto">
+
     <!-- Search, should appear as action button
     <item android:id="@+id/action_search"
           android:icon="@drawable/ic_action_search"
           android:title="@string/action_search"
           mathapp:showAsAction="ifRoom" /> -->
+
     <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/action_about"
           android:title="@string/action_about"
-          mathapp:showAsAction="never" />
+          mathapp:showAsAction="never"
+          />
 </menu>

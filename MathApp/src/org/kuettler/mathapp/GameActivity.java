@@ -88,8 +88,8 @@ public class GameActivity extends ActionBarActivity {
             mButton.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams lp =
                 (RelativeLayout.LayoutParams) mRightAnswersView.getLayoutParams();
-            lp.addRule(RelativeLayout.BELOW, kButton.getId());
-            lp.topMargin = 10;
+            //lp.addRule(RelativeLayout.BELOW, kButton.getId());
+            lp.topMargin += kButton.getHeight();
             mRightAnswersView.setLayoutParams(lp);
         }
 

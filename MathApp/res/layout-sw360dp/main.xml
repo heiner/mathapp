@@ -45,7 +45,7 @@
     <RadioButton android:id="@+id/radio_estimation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Est."
+        android:text="@string/estimation"
         android:onClick="setLevel"
         />
   </RadioGroup>
@@ -72,30 +72,35 @@
     <RadioButton android:id="@+id/radio_plus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
         android:text="@string/plus"
         android:onClick="setMode"
         />
     <RadioButton android:id="@+id/radio_minus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
         android:text="@string/minus"
         android:onClick="setMode"
         />
     <RadioButton android:id="@+id/radio_times"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
         android:text="@string/times"
         android:onClick="setMode"
         />
     <RadioButton android:id="@+id/radio_divide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
         android:text="@string/divide"
         android:onClick="setMode"
         />
     <RadioButton android:id="@+id/radio_percent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="14dp"
         android:text="@string/percent"
         android:onClick="setMode"
         />
@@ -109,7 +114,7 @@
     <RadioButton android:id="@id/radio_random"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="\?"
+        android:text="@string/random"
         android:onClick="setMode"
         />
   </RadioGroup>
